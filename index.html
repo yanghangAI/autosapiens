@@ -16,14 +16,14 @@
         
         <h2 class="mt-5">Results Overview</h2>
         <div class="table-responsive">
-            <table class="table table-striped table-hover mt-3 shadow-sm rounded">
+            <table class="table table-striped table-hover mt-3 shadow-sm rounded" id="resultsTable">
                 <thead class="table-dark">
                     <tr>
-                        <th>Idea ID</th>
-                        <th>Design ID</th>
-                        <th>Epoch</th>
-                        <th>Train MPJPE</th>
-                        <th>Val MPJPE</th>
+                        <th onclick="sortTable(0)" style="cursor: pointer;" title="Click to sort">Idea ID ↕</th>
+                        <th onclick="sortTable(1)" style="cursor: pointer;" title="Click to sort">Design ID ↕</th>
+                        <th onclick="sortTable(2)" style="cursor: pointer;" title="Click to sort">Epoch ↕</th>
+                        <th onclick="sortTable(3)" style="cursor: pointer;" title="Click to sort">Train MPJPE ↕</th>
+                        <th onclick="sortTable(4)" style="cursor: pointer;" title="Click to sort">Val MPJPE ↕</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -213,5 +213,41 @@ Provide explicit geometric awareness to the Transformer, which currently only us
             </div>
         </div>
     </div>
+    <script>
+    function sortTable(n) {
+      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+      table = document.getElementById("resultsTable");
+      switching = true;
+      dir = "asc"; 
+      while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+          shouldSwitch = false;
+          x = rows[i].getElementsByTagName("TD")[n];
+          y = rows[i + 1].getElementsByTagName("TD")[n];
+          let xContent = x.innerText || x.textContent;
+          let yContent = y.innerText || y.textContent;
+          let xValue = isNaN(parseFloat(xContent)) ? xContent.toLowerCase() : parseFloat(xContent);
+          let yValue = isNaN(parseFloat(yContent)) ? yContent.toLowerCase() : parseFloat(yContent);
+          if (dir == "asc") {
+            if (xValue > yValue) { shouldSwitch = true; break; }
+          } else if (dir == "desc") {
+            if (xValue < yValue) { shouldSwitch = true; break; }
+          }
+        }
+        if (shouldSwitch) {
+          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+          switching = true;
+          switchcount ++;      
+        } else {
+          if (switchcount == 0 && dir == "asc") {
+            dir = "desc";
+            switching = true;
+          }
+        }
+      }
+    }
+    </script>
 </body>
 </html>
