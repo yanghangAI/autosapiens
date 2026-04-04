@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoSapiens Project Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { padding-top: 2rem; background-color: #f8f9fa; } 
-        .idea-card { margin-bottom: 2rem; }
-        .text-umass-red { color: #881c1c !important; }
-        .bg-umass-red { background-color: #881c1c !important; color: white !important; }
-        .btn-outline-umass-red { border-color: #881c1c; color: #881c1c; text-decoration: none; }
-        .btn-outline-umass-red:hover { background-color: #881c1c; color: white; }
-        a { color: #881c1c; text-decoration: none; }
-        a:hover { color: #5a1212; text-decoration: underline; }
-    </style>
+    <style>body { padding-top: 2rem; background-color: #f8f9fa;} .idea-card { margin-bottom: 2rem; }</style>
 </head>
 <body>
     <div class="container">
@@ -26,7 +17,7 @@
         <h2 class="mt-5">Results Overview</h2>
         <div class="table-responsive">
             <table class="table table-striped table-hover mt-3 shadow-sm rounded" id="resultsTable">
-                <thead class="bg-umass-red">
+                <thead class="table-dark">
                     <tr>
                         <th onclick="sortTable(0)" style="cursor: pointer;" title="Click to sort">Idea ID ↕</th>
                         <th onclick="sortTable(1)" style="cursor: pointer;" title="Click to sort">Design ID ↕</th>
@@ -38,7 +29,7 @@
                 <tbody>
                     <tr class='table-secondary'>
                         <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea001/idea.md" target="_blank">idea001</a></td>
-                        <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea001/design001/design.md" target="_blank">design001</a> <span class="badge bg-umass-red">Baseline</span></td>
+                        <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea001/design001/design.md" target="_blank">design001</a> <span class="badge bg-secondary">Baseline</span></td>
                         <td>20</td>
                         <td>87.98</td>
                         <td>142.48</td>
@@ -59,7 +50,7 @@
                     </tr>
                     <tr class='table-secondary'>
                         <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea002/idea.md" target="_blank">idea002</a></td>
-                        <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea002/design001/design.md" target="_blank">design001</a> <span class="badge bg-umass-red">Baseline</span></td>
+                        <td><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea002/design001/design.md" target="_blank">design001</a> <span class="badge bg-secondary">Baseline</span></td>
                         <td>20</td>
                         <td>87.98</td>
                         <td>142.48</td>
@@ -144,7 +135,7 @@
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-umass-red"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea001/idea.md" target="_blank" style="text-decoration: none;">idea001: RGB-D Modality Fusion Strategy</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea001/idea.md" target="_blank" style="text-decoration: none;">idea001: RGB-D Modality Fusion Strategy</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Done</h6>
                         <div class="card-text small"><pre style="white-space: pre-wrap;"># RGB-D Modality Fusion Strategy
 
@@ -152,7 +143,7 @@
 
 **Concept:** 
 The Sapiens baseline uses 'early fusion' by modifying the first patch embedding layer for 4-channel input. This potentially dis...</pre></div>
-                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea001" target="_blank" class="btn btn-sm btn-outline-umass-red mt-2">View Full Idea & Designs</a>
+                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea001" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
             </div>
@@ -160,7 +151,7 @@ The Sapiens baseline uses 'early fusion' by modifying the first patch embedding 
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-umass-red"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea002/idea.md" target="_blank" style="text-decoration: none;">idea002: Kinematic Attention Masking</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea002/idea.md" target="_blank" style="text-decoration: none;">idea002: Kinematic Attention Masking</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Done</h6>
                         <div class="card-text small"><pre style="white-space: pre-wrap;"># Kinematic Attention Masking
 
@@ -168,7 +159,7 @@ The Sapiens baseline uses 'early fusion' by modifying the first patch embedding 
 
 **Concept:** 
 Human pose estimation models often predict physically impossible poses because the attention mechanism lacks explicit structural c...</pre></div>
-                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea002" target="_blank" class="btn btn-sm btn-outline-umass-red mt-2">View Full Idea & Designs</a>
+                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea002" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
             </div>
@@ -176,7 +167,7 @@ Human pose estimation models often predict physically impossible poses because t
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-umass-red"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea003/idea.md" target="_blank" style="text-decoration: none;">idea003: Curriculum-Based Loss Weighting</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea003/idea.md" target="_blank" style="text-decoration: none;">idea003: Curriculum-Based Loss Weighting</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Done</h6>
                         <div class="card-text small"><pre style="white-space: pre-wrap;"># Curriculum-Based Loss Weighting
 
@@ -184,7 +175,7 @@ Human pose estimation models often predict physically impossible poses because t
 
 **Concept:** 
 Absolute depth is hard and creates noisy gradients early on. It needs a learned or structured loss weighting over epochs to st...</pre></div>
-                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea003" target="_blank" class="btn btn-sm btn-outline-umass-red mt-2">View Full Idea & Designs</a>
+                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea003" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
             </div>
@@ -192,7 +183,7 @@ Absolute depth is hard and creates noisy gradients early on. It needs a learned 
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-umass-red"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea004/idea.md" target="_blank" style="text-decoration: none;">idea004: Layer-Wise Learning Rate Decay & Progressive Unfreezing</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea004/idea.md" target="_blank" style="text-decoration: none;">idea004: Layer-Wise Learning Rate Decay & Progressive Unfreezing</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Done</h6>
                         <div class="card-text small"><pre style="white-space: pre-wrap;"># Layer-Wise Learning Rate Decay & Progressive Unfreezing
 
@@ -200,7 +191,7 @@ Absolute depth is hard and creates noisy gradients early on. It needs a learned 
 
 **Concept:** 
 Use structure in how the backbone learns to prevent catastrophic forgetting of the ViT's rich pre-trai...</pre></div>
-                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea004" target="_blank" class="btn btn-sm btn-outline-umass-red mt-2">View Full Idea & Designs</a>
+                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea004" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
             </div>
@@ -208,7 +199,7 @@ Use structure in how the backbone learns to prevent catastrophic forgetting of t
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-umass-red"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea005/idea.md" target="_blank" style="text-decoration: none;">idea005: Depth-Aware Positional Embeddings</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea005/idea.md" target="_blank" style="text-decoration: none;">idea005: Depth-Aware Positional Embeddings</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Designed</h6>
                         <div class="card-text small"><pre style="white-space: pre-wrap;"># Depth-Aware Positional Embeddings
 
@@ -216,7 +207,7 @@ Use structure in how the backbone learns to prevent catastrophic forgetting of t
 
 **Concept:** 
 Provide explicit geometric awareness to the Transformer, which currently only uses standard 2D positional encodings. Inject ...</pre></div>
-                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea005" target="_blank" class="btn btn-sm btn-outline-umass-red mt-2">View Full Idea & Designs</a>
+                        <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea005" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
             </div>
