@@ -4,6 +4,17 @@ set -e
 # Get the current branch (just in case)
 current_branch=$(git branch --show-current)
 
+# Trap any exit (like Ctrl+C or a crash) to ensure we always return to the original branch
+cleanup() {
+    echo "Cleaning up..."
+    # Only try to checkout and stash pop if we actually left the original branch
+    if [ "$(git branch --show-current)" != "$current_branch" ]; then
+        git checkout "$current_branch" || true
+        git stash pop -q || true
+    fi
+}
+trap cleanup EXIT INT TERM
+
 echo "1) Generating the website..."
 python scripts/generate_website.py
 
@@ -31,8 +42,7 @@ else
     echo "   No changes to index.html."
 fi
 
-# Go back to the original branch
-git checkout $current_branch
-git stash pop -q || true
+# The cleanup trap will automatically handle the git checkout back to the $current_branch
+# upon exit, including a successful finish.
 
 echo "✅ Website successfully updated and pushed to GitHub!"
