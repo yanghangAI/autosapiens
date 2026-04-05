@@ -39,3 +39,31 @@ python scripts/tracker.py sync_all
 - **`scripts/auto_submit.sh`**: The queue manager. Run this anytime statuses change so it can keep the cluster fed (up to the 30-job limit).
 - **`scripts/run_summarize.sh`**: The data scraper. Run this periodically to harvest metrics from completed SLURM output folders.
 - **`scripts/deploy_website.sh`**: The UI publisher. Run this only when you want to update the public-facing HTTP dashboard.
+## 🤖 Agent Instructions for Auto-Setup
+If you are an AI agent reading this document and have been asked to "setup the hooks", please perform the following actions:
+
+1. **Setup Git Hooks**:
+   Create a file at `.git/hooks/post-commit` with the following content and make it executable (`chmod +x .git/hooks/post-commit`):
+   ```bash
+   #!/bin/bash
+   # Prevent infinite loop
+   if [ "$_IN_POST_COMMIT" = "1" ]; then exit 0; fi
+   export _IN_POST_COMMIT=1
+   
+   if [ -f "scripts/update_all.sh" ]; then
+       ./scripts/update_all.sh
+   fi
+   ```
+
+2. **Setup Agent Framework Hooks (e.g. Claude Code)**:
+   If configuring the Claude Code or another agent CLI framework, update its configuration or `CLAUDE.md` to run the following after each command or turn:
+   ```bash
+   python scripts/tracker.py sync_all && ./scripts/auto_submit.sh
+   ```
+
+3. **Provide Cron Instructions**:
+   Log the following instructions to the user on how they can setup the cron job for scheduled tracking:
+   ```text
+   To set up the scheduled cron hook, run `crontab -e` and add:
+   */15 * * * * cd /work/pi_nwycoff_umass_edu/hang/auto && ./scripts/run_summarize.sh && python scripts/tracker.py sync_all && ./scripts/auto_submit.sh
+   ```
