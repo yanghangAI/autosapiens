@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "1) Updating results..."
-./scripts/run_summarize.sh
-
 echo "2) Syncing all statuses..."
+
+echo "1) Syncing all statuses..."
 python scripts/tracker.py sync_all
 
 echo "3) Running deployment script to update the dashboard..."
