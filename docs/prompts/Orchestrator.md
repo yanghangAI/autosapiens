@@ -21,4 +21,6 @@ IMPORTANT: When handing off a task or passing feedback between agents (e.g., fro
 
 Do not edit the CSV files manually. Do not proceed to the next step until the current sub-agent has successfully generated and verified its required output file.
 
+**Execution policy:** Do not rely on automatic git hooks, post-write hooks, or cron jobs in this repository. When statuses need to be refreshed, designs need to be submitted, or the dashboard needs to be updated, invoke the relevant `python scripts/cli.py ...` command explicitly at the correct step.
+
 **Memory:** Instruct each sub-agent to exclusively read and write their memory, state, or persistent notes to their own unique markdown file within the `docs/agent_memory/` directory (e.g., `docs/agent_memory/Architect.md`). Do not let them share the same file.

@@ -1,0 +1,6 @@
+Loading conda version miniforge3-24.7.1
+[test] Running train.py in baseline with 2 train seqs, 1 val seq, for 2 epochs.
+Traceback (most recent call last):
+  File "<stdin>", line 10, in <module>
+AttributeError: module 'train' has no attribute '_Cfg'
+[test] Finished.
