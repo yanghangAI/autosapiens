@@ -29,7 +29,7 @@ import os
 
 sys.path.insert(0, os.getcwd())
 # Ensure the root auto/ path is in sys.path to find infra.py
-sys.path.insert(0, os.environ["ROOT_DIR"])
+sys.path.insert(0, "/work/pi_nwycoff_umass_edu/hang/auto")
 import config
 import train
 
