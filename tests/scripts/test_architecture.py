@@ -11,6 +11,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.lib import layout
 from scripts.lib.dashboard import build_dashboard
+from scripts.lib.deploy import current_branch
 from scripts.lib.results import summarize_results
 from scripts.lib.status import derive_design_status, derive_idea_status, get_expected_designs
 
@@ -159,7 +160,7 @@ def test_submit_implemented_dry_run_uses_canonical_train_path(tmp_path: Path) ->
     result = run_cli(tmp_path, "submit-implemented", "--dry-run")
 
     assert result.returncode == 0, result.stderr
-    assert "idea001-design001" in result.stdout
+    assert "001-001" in result.stdout
     assert "design001/code/train.py" in result.stdout
 
 
@@ -214,3 +215,56 @@ def test_deploy_dashboard_refuses_dirty_tree(tmp_path: Path) -> None:
 
     assert result.returncode != 0
     assert "dirty git tree" in result.stderr or "dirty git tree" in result.stdout
+
+
+def test_deploy_dashboard_uses_worktree_and_keeps_main_checked_out(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-b", "main"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=tmp_path, check=True)
+    (tmp_path / "website").mkdir()
+    (tmp_path / "website" / "index.html").write_text("<html>main-dashboard</html>\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text("root\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "checkout", "-b", "gh-pages"], cwd=tmp_path, check=True, capture_output=True)
+    (tmp_path / "index.html").write_text("<html>old-dashboard</html>\n", encoding="utf-8")
+    subprocess.run(["git", "add", "index.html"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "seed gh-pages"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "checkout", "main"], cwd=tmp_path, check=True, capture_output=True)
+
+    result = run_cli(tmp_path, "deploy-dashboard", "--no-push")
+
+    assert result.returncode == 0, result.stderr
+    assert current_branch(tmp_path) == "main"
+    gh_pages_html = subprocess.run(
+        ["git", "show", "gh-pages:index.html"],
+        cwd=tmp_path,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout
+    assert "main-dashboard" in gh_pages_html
+
+
+def test_deploy_dashboard_creates_gh_pages_branch_when_missing(tmp_path: Path) -> None:
+    subprocess.run(["git", "init", "-b", "main"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test User"], cwd=tmp_path, check=True)
+    (tmp_path / "website").mkdir()
+    (tmp_path / "website" / "index.html").write_text("<html>first-dashboard</html>\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text("root\n", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=tmp_path, check=True, capture_output=True)
+
+    result = run_cli(tmp_path, "deploy-dashboard", "--no-push")
+
+    assert result.returncode == 0, result.stderr
+    assert current_branch(tmp_path) == "main"
+    gh_pages_html = subprocess.run(
+        ["git", "show", "gh-pages:index.html"],
+        cwd=tmp_path,
+        check=True,
+        text=True,
+        capture_output=True,
+    ).stdout
+    assert "first-dashboard" in gh_pages_html
