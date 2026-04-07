@@ -38,12 +38,17 @@ def update_idea(idea_id: str, status: str, root: Path | None = None) -> None:
     store.ensure_csv(csv_path, IDEA_HEADERS)
     rows = store.read_csv_rows(csv_path)
     updated = False
+    changed = False
     for row in rows:
         if row and row[0] == idea_id:
-            row[2] = status
+            if row[2] != status:
+                row[2] = status
+                changed = True
             updated = True
     if not updated:
         print(f"Idea {idea_id} not found.")
+        return
+    if not changed:
         return
     store.write_csv_rows(csv_path, rows)
     print(f"Updated idea {idea_id} to '{status}'.")
