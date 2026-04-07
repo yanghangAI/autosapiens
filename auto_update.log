@@ -23,3 +23,34 @@ Successfully summarized 17 results into /work/pi_nwycoff_umass_edu/hang/auto/res
 Sync complete.
 Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
 Dashboard deployed to gh-pages.
+=== update-all 2026-04-07 19:44:58 EDT ===
+Running summarize_results...
+Successfully summarized 17 results into /work/pi_nwycoff_umass_edu/hang/auto/results.csv
+Sync complete.
+Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
+Traceback (most recent call last):
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/cli.py", line 109, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/cli.py", line 103, in main
+    deploy.commit_changes(root=args.root)
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/lib/deploy.py", line 48, in commit_changes
+    git(root_path, "commit", "-m", commit_message, capture_output=False)
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/lib/deploy.py", line 17, in git
+    return subprocess.run(
+           ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 550, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1201, in communicate
+    self.wait()
+  File "/usr/lib/python3.12/subprocess.py", line 1264, in wait
+    return self._wait(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2053, in _wait
+    (pid, sts) = self._try_wait(0)
+                 ^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 2011, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
