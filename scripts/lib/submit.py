@@ -7,6 +7,12 @@ from scripts.lib import layout, store
 from scripts.lib.models import Status
 
 
+def compact_job_name(design_path: Path) -> str:
+    idea_suffix = design_path.parent.name.removeprefix("idea")
+    design_suffix = design_path.name.removeprefix("design")
+    return f"{idea_suffix}-{design_suffix}"
+
+
 def implemented_design_dirs(root: Path | None = None) -> list[Path]:
     root_path = layout.repo_root(root)
     found: list[Path] = []
@@ -75,7 +81,7 @@ def submit_implemented(
         if not train_script.is_file():
             print(f"Warning: {train_script} does not exist! Skipping.")
             continue
-        job_name = f"{design_path.parent.name}-{design_path.name}"
+        job_name = compact_job_name(design_path)
         if dry_run:
             print(f"DRY RUN: would submit training job for {job_name} using {train_script}")
         else:

@@ -26,7 +26,7 @@ python scripts/cli.py summarize-results
 python scripts/cli.py sync-status
 python scripts/cli.py setup-design baseline/ runs/idea001/design001
 python scripts/cli.py submit-test runs/idea001/design001
-python scripts/cli.py submit-train runs/idea001/design001/code/train.py idea001-design001
+python scripts/cli.py submit-train runs/idea001/design001/code/train.py 001-001
 python scripts/cli.py submit-implemented
 python scripts/cli.py build-dashboard
 python scripts/cli.py deploy-dashboard
@@ -50,7 +50,7 @@ What each command does:
 - `build-dashboard`
   Reads the tracking CSVs and generates `website/index.html`.
 - `deploy-dashboard`
-  Copies the generated dashboard to the `gh-pages` branch and optionally pushes it, while refusing dirty-tree deploys unless explicitly allowed.
+  Copies the generated dashboard to the `gh-pages` branch through a temporary git worktree, optionally pushes it, creates `gh-pages` on first deploy if needed, and refuses dirty-tree deploys unless explicitly allowed.
 - `update-all`
   Runs the full dashboard-refresh workflow: sync statuses, rebuild the dashboard, and deploy it.
 
@@ -82,7 +82,7 @@ python scripts/cli.py update-all --allow-dirty
 - `lib/dashboard.py`
   Dashboard data preparation and HTML rendering.
 - `lib/deploy.py`
-  Git-based dashboard deployment to `gh-pages`.
+  Git-based dashboard deployment to `gh-pages` using a temporary worktree so the active checkout stays on its current branch.
 - `tools/setup_design.py`
   Copies a baseline or prior design into a new design folder and patches `output_dir`.
 - `tools/show_diff.sh`
@@ -140,6 +140,7 @@ Submission logic prefers `code/train.py`, but still falls back to a flat `train.
 ## Safety Notes
 
 - `deploy-dashboard` only stages the generated dashboard output.
+- `deploy-dashboard` uses a temporary worktree instead of switching the active checkout to `gh-pages`.
 - `deploy-dashboard` refuses to run on a dirty git tree unless `--allow-dirty` is passed.
 - `sync-status` regenerates `results.csv` before recalculating idea and design statuses.
 - `submit-test --dry-run` previews the sanity-check SLURM submission without calling `sbatch`.
