@@ -75,7 +75,7 @@ def deploy_dashboard(root: Path | None = None, allow_dirty: bool = False, push: 
             if diff.returncode == 1:
                 git(worktree_path, "commit", "-m", f"Auto-deploy website [{timestamp}]")
                 if push:
-                    git(worktree_path, "push", "origin", "HEAD:gh-pages")
+                    git(worktree_path, "push", "--force", "origin", "HEAD:gh-pages", capture_output=False)
                 print("Dashboard deployed to gh-pages.")
             elif diff.returncode == 0:
                 print("Dashboard already up to date on gh-pages.")
