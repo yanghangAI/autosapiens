@@ -95,7 +95,7 @@ def main(argv: list[str] | None = None) -> int:
         status.sync_all(root=args.root)
         dashboard.build_dashboard(root=args.root)
         deploy.commit_changes(root=args.root)
-        deploy.deploy_dashboard(root=args.root, allow_dirty=args.allow_dirty, push=not args.no_push)
+        deploy.deploy_dashboard(root=args.root, allow_dirty=True, push=not args.no_push)
     return 0
 
 
