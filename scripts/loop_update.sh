@@ -6,7 +6,7 @@
 #   Ctrl+B, D  to detach
 
 REPO=/work/pi_nwycoff_umass_edu/hang/auto
-LOG=$REPO/cron_hook.log
+LOG=$REPO/auto_update.log
 INTERVAL=60
 
 while true; do
