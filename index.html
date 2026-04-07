@@ -13,7 +13,7 @@
             <h1 class="mb-0">AutoSapiens Dashboard</h1>
             <a href="https://github.com/yanghangAI/autosapiens" target="_blank" class="btn btn-outline-dark">View on GitHub</a>
         </div>
-        
+
         <h2 class="mt-5">Results Overview</h2>
         <div class="table-responsive">
             <table class="table table-striped table-hover mt-3 shadow-sm rounded" id="resultsTable">
@@ -142,7 +142,7 @@
 **Expected Designs:** 3
 
 **Concept:** 
-The Sapiens baseline uses 'early fusion' by modifying the first patch embedding layer for 4-channel input. This potentially dis...</pre></div>
+The Sapiens baseline uses &#x27;early fusion&#x27; by modifying the first patch embedding layer for 4-channel input. This potentially dis...</pre></div>
                         <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea001" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
@@ -183,14 +183,14 @@ Absolute depth is hard and creates noisy gradients early on. It needs a learned 
             <div class="col-md-6 idea-card">
                 <div class="card h-100 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea004/idea.md" target="_blank" style="text-decoration: none;">idea004: Layer-Wise Learning Rate Decay & Progressive Unfreezing</a></h5>
+                        <h5 class="card-title text-primary"><a href="https://github.com/yanghangAI/autosapiens/blob/main/runs/idea004/idea.md" target="_blank" style="text-decoration: none;">idea004: Layer-Wise Learning Rate Decay &amp; Progressive Unfreezing</a></h5>
                         <h6 class="card-subtitle mb-2 text-muted">Status: Done</h6>
-                        <div class="card-text small"><pre style="white-space: pre-wrap;"># Layer-Wise Learning Rate Decay & Progressive Unfreezing
+                        <div class="card-text small"><pre style="white-space: pre-wrap;"># Layer-Wise Learning Rate Decay &amp; Progressive Unfreezing
 
 **Expected Designs:** 6
 
 **Concept:** 
-Use structure in how the backbone learns to prevent catastrophic forgetting of the ViT's rich pre-trai...</pre></div>
+Use structure in how the backbone learns to prevent catastrophic forgetting of the ViT&#x27;s rich pre-trai...</pre></div>
                         <a href="https://github.com/yanghangAI/autosapiens/tree/main/runs/idea004" target="_blank" class="btn btn-sm btn-outline-primary mt-2">View Full Idea & Designs</a>
                     </div>
                 </div>
@@ -218,7 +218,7 @@ Provide explicit geometric awareness to the Transformer, which currently only us
       var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
       table = document.getElementById("resultsTable");
       switching = true;
-      dir = "asc"; 
+      dir = "asc";
       while (switching) {
         switching = false;
         rows = table.rows;
@@ -239,12 +239,10 @@ Provide explicit geometric awareness to the Transformer, which currently only us
         if (shouldSwitch) {
           rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
           switching = true;
-          switchcount ++;      
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc";
-            switching = true;
-          }
+          switchcount ++;
+        } else if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
         }
       }
     }
