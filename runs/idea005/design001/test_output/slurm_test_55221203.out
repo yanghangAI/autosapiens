@@ -1,0 +1,8 @@
+Loading conda version miniforge3-24.7.1
+[test] Running train.py in /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design001 with 2 train seqs, 1 val seq, for 2 epochs.
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design001/code/config.py", line 7, in <module>
+    from infra import (
+ModuleNotFoundError: No module named 'infra'
+[test] Finished.

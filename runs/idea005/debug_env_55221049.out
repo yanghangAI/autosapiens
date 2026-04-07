@@ -1,0 +1,9 @@
+/var/spool/slurm/slurmd/job55221049/slurm_script: 5: module: not found
+/var/spool/slurm/slurmd/job55221049/slurm_script: 6: conda: not found
+ROOT_DIR: /work/pi_nwycoff_umass_edu/hang/auto
+Python: /usr/bin/python
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/work/pi_nwycoff_umass_edu/hang/auto/infra.py", line 24, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
