@@ -117,3 +117,53 @@ Successfully summarized 17 results into /work/pi_nwycoff_umass_edu/hang/auto/res
 Sync complete.
 Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
 Dashboard already up to date on gh-pages.
+[main be8b7e2] Auto-commit results [2026-04-07 23:45:33 UTC]
+ Committer: Hang Yang <hangyang_umass_edu@login1.unity.rc.umass.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 7 files changed, 75 insertions(+), 3 deletions(-)
+ create mode 100755 scripts/.nfs21be4cc90d0ca2540008c376
+=== update-all 2026-04-07 19:45:30 EDT ===
+Running summarize_results...
+Successfully summarized 17 results into /work/pi_nwycoff_umass_edu/hang/auto/results.csv
+Sync complete.
+Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
+Dashboard already up to date on gh-pages.
+=== update-all 2026-04-07 19:45:39 EDT ===
+Running summarize_results...
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/pathlib.py", line 1313, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/work/pi_nwycoff_umass_edu/hang/auto'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/cli.py", line 109, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/cli.py", line 98, in main
+    status.sync_all(root=args.root)
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/lib/status.py", line 241, in sync_all
+    results_service.summarize_results(root=root)
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/lib/results.py", line 65, in summarize_results
+    store.write_dict_rows(layout.results_csv_path(root), RESULT_FIELDS, out_rows)
+  File "/work/pi_nwycoff_umass_edu/hang/auto/scripts/lib/store.py", line 51, in write_dict_rows
+    path.parent.mkdir(parents=True, exist_ok=True)
+  File "/usr/lib/python3.12/pathlib.py", line 1322, in mkdir
+    if not exist_ok or not self.is_dir():
+                           ^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 872, in is_dir
+    def is_dir(self):
+
+KeyboardInterrupt
