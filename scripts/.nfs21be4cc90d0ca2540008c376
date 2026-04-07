@@ -7,7 +7,7 @@
 
 REPO=/work/pi_nwycoff_umass_edu/hang/auto
 LOG=$REPO/auto_update.log
-INTERVAL=$(( 60 * 60 * 2 ))
+INTERVAL=60 * 60 * 2
 
 while true; do
     cd "$REPO"
