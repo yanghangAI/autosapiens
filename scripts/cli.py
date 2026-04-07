@@ -94,6 +94,9 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "update-all":
         status.sync_all(root=args.root)
         dashboard.build_dashboard(root=args.root)
+        if not deploy.working_tree_dirty(args.root):
+            print("Nothing changed, skipping commit and deploy.")
+            return 0
         deploy.commit_changes(root=args.root)
         deploy.deploy_dashboard(root=args.root, allow_dirty=True, push=not args.no_push)
     return 0
