@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import datetime
 from pathlib import Path
 
 
@@ -92,6 +93,8 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "deploy-dashboard":
         deploy.deploy_dashboard(root=args.root, allow_dirty=args.allow_dirty, push=not args.no_push)
     elif args.command == "update-all":
+        from zoneinfo import ZoneInfo
+        print(f"=== update-all {datetime.now(ZoneInfo('America/New_York')).strftime('%Y-%m-%d %H:%M:%S %Z')} ===")
         status.sync_all(root=args.root)
         dashboard.build_dashboard(root=args.root)
         if not deploy.working_tree_dirty(args.root):
