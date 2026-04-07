@@ -1,20 +1,17 @@
 {
   "permissions": {
+    "allow": [
+      "Bash(ls -la /tmp/debug_test*)",
+      "Bash(sacct -j 55221003 --format=JobID,State,ExitCode,Start,End,WorkDir --noheader)",
+      "Bash(ls -la /work/pi_nwycoff_umass_edu/hang/auto/debug_test_*)",
+      "Read(//home/hangyang_umass_edu/**)",
+      "Bash(git -C /work/pi_nwycoff_umass_edu/hang/auto show 2927e8b -- scripts/slurm/slurm_test.sh)",
+      "Bash(python3 -c ':*)",
+      "Bash(/work/pi_nwycoff_umass_edu/.conda/envs/hang/bin/python scripts/cli.py sync-status)"
+    ],
     "defaultMode": "bypassPermissions",
-    "allowedPaths": ["/work/pi_nwycoff_umass_edu/hang/auto"]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd /work/pi_nwycoff_umass_edu/hang/auto && python scripts/cli.py sync-status && python scripts/cli.py submit-implemented 2>/dev/null || true",
-            "statusMessage": "Syncing tracker and submitting..."
-          }
-        ]
-      }
+    "allowedPaths": [
+      "/work/pi_nwycoff_umass_edu/hang/auto"
     ]
   }
 }

@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\(''/work/pi_nwycoff_umass_edu/hang/auto/infra.py''\\).read\\(\\)\\); print\\(''infra.py OK''\\)\")",
+      "Bash(python3 -c \"import ast; ast.parse\\(open\\(''/work/pi_nwycoff_umass_edu/hang/auto/train.py''\\).read\\(\\)\\); print\\(''train.py OK''\\)\")",
+      "Bash(find /work/pi_nwycoff_umass_edu/hang/auto/sapiens -name *.pth)",
+      "Bash(find /work/pi_nwycoff_umass_edu/hang -name *.pth)",
+      "Bash(find /work/pi_nwycoff_umass_edu/hang -name sapiens_0.3b*)",
+      "Bash(find /home/hangyang_umass_edu -name *.pth)",
+      "Bash(sbatch:*)",
+      "Bash(sinfo -p gpu-preempt -o \"%P %G %f %t %N\")",
+      "Bash(scancel 53963127)",
+      "Bash(scancel 53964808)",
+      "Bash(squeue:*)",
+      "Bash(sinfo -p gpu-preempt -o \"%P %G %t %N %f\")",
+      "Bash(scancel 53965540)",
+      "Bash(scancel 53966572)",
+      "Bash(scontrol show:*)",
+      "Bash(scancel 53966675)",
+      "Bash(scontrol update:*)",
+      "Bash(scancel 53967152)",
+      "Bash(scancel 53968798)",
+      "Bash(scancel 53980903)",
+      "Bash(/dev/null sinfo:*)",
+      "Bash(for node:*)",
+      "Bash(do scontrol:*)",
+      "Bash(scancel 53991850)",
+      "Bash(scancel 54053546)"
+    ]
+  }
+}

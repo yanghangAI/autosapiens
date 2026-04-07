@@ -1,1 +1,22 @@
 Loading conda version miniforge3-24.7.1
+Device: cuda
+Output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design001
+  Saved script snapshot → /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design001/train_snapshot.py
+
+Building data splits ...
+  Loaded splits from /work/pi_nwycoff_umass_edu/hang/auto/splits_rome_tracking.json
+  Sequences — train: 100, val: 50
+  Frames  — train: 6314, val: 3316
+
+Building sapiens_0.3b ...
+[weights] patch_embed: 3ch → 4ch  (depth = mean of RGB channels)
+[weights] pos_embed: 64×64 → 40×24  (bicubic)
+[weights] DepthBucketPE: row_emb & col_emb init from pretrained 2D PE; depth_emb zero-initialized
+[weights] Loaded 292 / 296 backbone tensors
+[weights] Head (81 tensors) randomly initialised
+  Parameters: 307.9M
+
+Starting training for 20 epochs ...
+
+Epoch 1/20  lr_backbone=3.33e-06  lr_head=3.33e-05
+Epoch 1 [train]:   0%|          | 0/1579 [00:00<?, ?it/s]

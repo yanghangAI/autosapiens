@@ -1,0 +1,1 @@
+epoch,iter,loss,loss_pose,loss_depth,loss_uv,mpjpe_body,pelvis_err,mpjpe_weighted

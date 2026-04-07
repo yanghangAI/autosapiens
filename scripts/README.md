@@ -144,6 +144,7 @@ Submission logic prefers `code/train.py`, but still falls back to a flat `train.
 - `sync-status` regenerates `results.csv` before recalculating idea and design statuses.
 - `submit-test --dry-run` previews the sanity-check SLURM submission without calling `sbatch`.
 - `submit-implemented --dry-run` is the safest way to inspect pending submissions.
+- This repo now prefers explicit agent/manual invocation of `cli.py` commands over automatic git hooks or post-write hooks.
 
 ## Testing
 
