@@ -1,6 +1,49 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- Idea: idea005/design003 (depth_conditioned_pe): IMPLEMENTED, TEST PASSED. Awaiting Designer review.
+
+## idea005/design003 Status
+- Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design003/code/model.py
+- Test job: 55234104, PASSED
+- Final val body MPJPE: 493.8mm (2-epoch test run)
+- Test output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design003/test_output/
+- Key implementation details:
+  1. New `DepthConditionedPE` module in model.py: 3-layer MLP: Linear(3→128)+GELU, Linear(128→256)+GELU, Linear(256→1024)
+     - Xavier uniform init with gain=0.01 on all layers, zero biases
+  2. `SapiensBackboneRGBD.forward` manually bypasses `vit.forward()` to avoid double-adding pos_embed
+     - Calls patch_embed(x) → returns (tokens, patch_resolution) tuple (unpack both)
+     - Builds row/col grid normalized to [0,1], avg_pools depth channel: F.avg_pool2d(depth_ch, k=16, s=16) → (B,1,40,24)
+     - Stacks coords: (B, 960, 3); passes through depth_cond_pe → (B, 960, 1024)
+     - pe_base = vit.pos_embed (1, 960, 1024); x_tokens = patch_tokens + pe_base + pe_correction
+     - Applies vit.drop_after_pos, vit.pre_norm, then manual loop: vit.layers + vit.ln1 at last layer
+     - Reshapes: (B, 960, 1024) → (B, 40, 24, 1024) → .permute(0,3,1,2) → (B, 1024, 40, 24)
+  3. Optimizer: 3 param groups — backbone ViT params (lr=1e-5), depth_cond_pe MLP (lr=1e-4), head (lr=1e-4)
+     - Filter by name: 'depth_cond_pe' in name
+  4. config.py: added lr_depth_pe = 1e-4
+  5. train.py: lr_hd now uses optimizer.param_groups[2] (was [1]) since depth_pe is group [1]
+  6. GPU memory: 2.33GB batch1 / 4.64GB batch2 — fits within 11GB VRAM
+
+## idea005/design002 Status
+- Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design002/code/model.py
+- Test job: 55234001, PASSED
+- Final val body MPJPE: 532.67mm (2-epoch test run)
+- Test output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design002/test_output/
+- Key implementation details:
+  1. New `DepthAttentionBias` module in model.py: Linear(1, num_joints=70), zero-init weight+bias
+  2. Computes depth patches via F.avg_pool2d(depth_ch, k=16, s=16), reshapes to (B, N_mem, 1),
+     projects to (B, N_mem, 70), transposes to (B, 70, N_mem=960)
+  3. `Pose3DHead.forward(feat, depth_ch)`: manual decoder loop over `self.decoder.layers`
+     - norm_first=True layer order: norm1 → self_attn → dropout1, norm2 → multihead_attn → dropout2, norm3 → FFN → dropout3
+     - depth_bias_expanded shape: (B*num_heads, num_joints, N_mem) = (B*8, 70, 960)
+     - Passed as `attn_mask` to layer.multihead_attn (additive bias before softmax)
+  4. `SapiensPose3D.forward`: extracts depth_ch = x[:, 3:4, :, :], passes to self.head(feat, depth_ch)
+  5. Optimizer: 2 groups — backbone (lr=1e-5), head (includes DepthAttentionBias, lr=1e-4)
+  6. train.py: added seed 2026, PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+  7. train.py: prints "FINAL_VAL_MPJPE_BODY: {value}" at end of main()
+  8. GPU memory: 2.33GB batch1 / 4.63GB batch2 — fits 1080ti 11GB
+
+## idea004/design001 Status
 - Idea: idea004 (Layer-Wise Learning Rate Decay)
 - design001 (Constant Decay LLRD, gamma=0.95, unfreeze_epoch=5): IMPLEMENTED, TEST PASSED.
 

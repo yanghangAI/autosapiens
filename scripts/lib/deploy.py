@@ -37,6 +37,17 @@ def branch_exists(root: Path, branch: str) -> bool:
     return result.returncode == 0
 
 
+def commit_changes(root: Path, message: str | None = None) -> None:
+    """Stage all changes and commit if the working tree is dirty."""
+    root_path = root if isinstance(root, Path) else Path(root)
+    if not working_tree_dirty(root_path):
+        return
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    commit_message = message or f"Auto-commit results [{timestamp}]"
+    git(root_path, "add", "-A")
+    git(root_path, "commit", "-m", commit_message, capture_output=False)
+
+
 def deploy_dashboard(root: Path | None = None, allow_dirty: bool = False, push: bool = True) -> None:
     root_path = layout.repo_root(root)
     source_path = layout.website_index_path(root_path)
