@@ -1,0 +1,7 @@
+Design_ID,Design_Description,Status
+design001,Horizontal Flip,Submitted
+design002,Scale/Crop Jitter,Not Implemented
+design003,Color Jitter,Not Implemented
+design004,Depth Channel Augmentation,Not Implemented
+design005,Combined Geometric: Flip + Scale Jitter,Not Implemented
+design006,Full Stack: Flip + Color Jitter + Depth Noise,Not Implemented

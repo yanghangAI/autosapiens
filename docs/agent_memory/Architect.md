@@ -67,6 +67,21 @@
   - design003: Builder must inspect vit attribute names via `print(model.backbone.vit)` before writing the manual forward override.
 - **idea_overview.csv status:** Updated to 'Designed'.
 
+### idea006 — Training Data Augmentation for Generalization
+- **Status:** Defined (2026-04-08). Design phase NOT yet started.
+- **Designs needed:** 6 novel designs.
+- **Baseline starting point:** `baseline.py`
+- **Key motivation:** All 5 prior ideas show a persistent 35–60mm train-val MPJPE gap. Zero augmentation is applied in the baseline. Augmentation is the most prominent unexplored axis.
+- **Designs:**
+  - design001: Horizontal Flip only (p=0.5) — with proper left-right joint swap
+  - design002: Scale/Crop Jitter only (±20% bbox scale)
+  - design003: Color Jitter only (RGB, torchvision, brightness/contrast/saturation/hue)
+  - design004: Depth Channel Augmentation (Gaussian noise + 10% pixel dropout)
+  - design005: Combined Geometric: Flip + Scale Jitter
+  - design006: Full Stack: Flip + Color Jitter + Depth Noise
+- **Key constraint for Designer:** Horizontal flip requires left-right joint swap in SMPLX topology and pelvis_uv[0] negation. Scale jitter modifies bbox before CropPerson; root-relative joints unaffected. Augmentations go into `build_train_transform()` only.
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).
