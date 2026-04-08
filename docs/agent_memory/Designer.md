@@ -1,5 +1,36 @@
 # Experiment Designer Memory
 
+## Idea 006 Current State (Training Data Augmentation for Generalization) — IN PROGRESS 2026-04-08
+- 6 designs requested.
+- design001 (Horizontal Flip only, p=0.5): APPROVED.
+  - RandomHorizontalFlip inserted after CropPerson, before SubtractRoot.
+  - joints[:, 1] *= -1; swap FLIP_PAIRS (already remapped 0..69 from infra.py).
+  - pelvis_uv negation handled implicitly by SubtractRoot after Y-negation.
+  - Only transforms.py + config.py change; train.py and model.py unchanged.
+- design002 (Scale/Crop Jitter only, ±20%): DRAFTED — awaiting Reviewer.
+  - RandomScaleJitter(low=0.8, high=1.2) inserted BEFORE CropPerson.
+  - Scales bbox half-extents by s~Uniform(0.8,1.2) around centre.
+  - Joint 3D root-relative coordinates unaffected (metric camera space).
+  - pelvis_uv/pelvis_depth recomputed correctly by SubtractRoot post-jitter.
+  - Builder must verify bbox format ([x_min,y_min,x_max,y_max] vs [cx,cy,w,h]).
+  - Only transforms.py + config.py change; train.py and model.py unchanged.
+- design005 (Combined Geometric: Flip + Scale Jitter): DRAFTED — awaiting Reviewer.
+  - RandomScaleJitter(0.8,1.2) BEFORE CropPerson; RandomHorizontalFlip(p=0.5) AFTER CropPerson, BEFORE SubtractRoot.
+  - Exact same classes as design001 and design002 (no changes to individual transforms).
+  - Pipeline order: RandomScaleJitter → CropPerson → RandomHorizontalFlip → SubtractRoot → ToTensor.
+  - pelvis_uv negation implicit via SubtractRoot after Y-negate; no explicit correction.
+  - Builder must verify bbox format ([x_min,y_min,x_max,y_max] assumed).
+  - Only transforms.py + config.py change; train.py and model.py unchanged.
+- design006 (Full Stack: Flip + Color Jitter + Depth Noise): DRAFTED — awaiting Reviewer.
+  - RandomHorizontalFlip(p=0.5) after CropPerson, before SubtractRoot (same as design001).
+  - RGBColorJitter(brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1) after ToTensor (same as design003).
+  - DepthAugmentation(noise_sigma=0.02, dropout_rate=0.10, p=0.5) after RGBColorJitter (same as design004).
+  - Pipeline order: CropPerson → RandomHorizontalFlip → SubtractRoot → ToTensor → RGBColorJitter → DepthAugmentation.
+  - pelvis_uv negation handled implicitly by SubtractRoot post-flip; no explicit correction needed.
+  - Scale jitter intentionally excluded per idea.md Axis 6 specification.
+  - Only transforms.py + config.py change; train.py and model.py unchanged.
+- design003, design004: not yet noted here (drafted separately).
+
 ## Idea 005 Current State (Depth-Aware Positional Embeddings) — COMPLETE 2026-04-03
 - 3 designs requested, all APPROVED by Architect on 2026-04-03.
 - design001 (discretized_depth_pe): Decomposed row+col+depth bucket PE. row_emb (40,1024) + col_emb (24,1024) init from pretrained pos_embed mean-projection; depth_emb (16,1024) zero-init. vit.pos_embed → frozen zero buffer. depth_bucket_pe params at lr=1e-4.
