@@ -6,7 +6,7 @@ from pathlib import Path
 from scripts.lib import layout, store
 
 
-GITHUB_REPO_URL = "https://github.com/yanghangAI/autosapiens"
+GITHUB_REPO_URL = "https://github.com/yanghangAI/MultiAgentAutoResearch"
 
 
 def is_baseline_result(idea_id: str, design_id: str) -> bool:
@@ -52,7 +52,11 @@ def build_context(root: Path | None = None) -> dict[str, list[dict[str, object]]
                 "idea_id": idea_id,
                 "design_id": design_id,
                 "epoch": row.get("epoch", ""),
+                "train_mpjpe_body": row.get("train_mpjpe_body", "0"),
+                "train_pelvis_err": row.get("train_pelvis_err", "0"),
                 "train_mpjpe_weighted": row.get("train_mpjpe_weighted", "0"),
+                "val_mpjpe_body": row.get("val_mpjpe_body", "0"),
+                "val_pelvis_err": row.get("val_pelvis_err", "0"),
                 "val_mpjpe_weighted": row.get("val_mpjpe_weighted", "0"),
                 "is_baseline": is_baseline_result(idea_id, design_id),
                 "idea_url": github_blob_url("runs", idea_id, "idea.md"),
@@ -90,7 +94,7 @@ def render_dashboard(context: dict[str, list[dict[str, object]]]) -> str:
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="mb-0">AutoSapiens Dashboard</h1>
-            <a href="https://github.com/yanghangAI/autosapiens" target="_blank" class="btn btn-outline-dark">View on GitHub</a>
+            <a href="https://github.com/yanghangAI/MultiAgentAutoResearch" target="_blank" class="btn btn-outline-dark">View on GitHub</a>
         </div>
 
         <h2 class="mt-5">Results Overview</h2>
@@ -101,14 +105,22 @@ def render_dashboard(context: dict[str, list[dict[str, object]]]) -> str:
                         <th onclick="sortTable(0)" style="cursor: pointer;" title="Click to sort">Idea ID ↕</th>
                         <th onclick="sortTable(1)" style="cursor: pointer;" title="Click to sort">Design ID ↕</th>
                         <th onclick="sortTable(2)" style="cursor: pointer;" title="Click to sort">Epoch ↕</th>
-                        <th onclick="sortTable(3)" style="cursor: pointer;" title="Click to sort">Train MPJPE ↕</th>
-                        <th onclick="sortTable(4)" style="cursor: pointer;" title="Click to sort">Val MPJPE ↕</th>
+                        <th onclick="sortTable(3)" style="cursor: pointer;" title="Click to sort">Train Body ↕</th>
+                        <th onclick="sortTable(4)" style="cursor: pointer;" title="Click to sort">Train Pelvis ↕</th>
+                        <th onclick="sortTable(5)" style="cursor: pointer;" title="Click to sort">Train Weighted ↕</th>
+                        <th onclick="sortTable(6)" style="cursor: pointer;" title="Click to sort">Val Body ↕</th>
+                        <th onclick="sortTable(7)" style="cursor: pointer;" title="Click to sort">Val Pelvis ↕</th>
+                        <th onclick="sortTable(8)" style="cursor: pointer;" title="Click to sort">Val Weighted ↕</th>
                     </tr>
                 </thead>
                 <tbody>
 """
     for row in context["results"]:
+        train_body = row["train_mpjpe_body"] or "0"
+        train_pelvis = row["train_pelvis_err"] or "0"
         train_val = row["train_mpjpe_weighted"] or "0"
+        val_body = row["val_mpjpe_body"] or "0"
+        val_pelvis = row["val_pelvis_err"] or "0"
         val_val = row["val_mpjpe_weighted"] or "0"
         badge = ' <span class="badge bg-secondary">Baseline</span>' if row["is_baseline"] else ""
         tr_class = " class='table-secondary'" if row["is_baseline"] else ""
@@ -119,7 +131,11 @@ def render_dashboard(context: dict[str, list[dict[str, object]]]) -> str:
             f"                        <td><a href=\"{escape(str(row['design_url']))}\" target=\"_blank\">"
             f"{escape(str(row['design_id']))}</a>{badge}</td>\n"
             f"                        <td>{escape(str(row['epoch']))}</td>\n"
+            f"                        <td>{float(train_body) if train_body else 0:.2f}</td>\n"
+            f"                        <td>{float(train_pelvis) if train_pelvis else 0:.2f}</td>\n"
             f"                        <td>{float(train_val) if train_val else 0:.2f}</td>\n"
+            f"                        <td>{float(val_body) if val_body else 0:.2f}</td>\n"
+            f"                        <td>{float(val_pelvis) if val_pelvis else 0:.2f}</td>\n"
             f"                        <td>{float(val_val) if val_val else 0:.2f}</td>\n"
             "                    </tr>\n"
         )
