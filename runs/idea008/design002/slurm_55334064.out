@@ -1,0 +1,22 @@
+Loading conda version miniforge3-24.7.1
+Device: cuda
+Output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea008/design002
+  Saved script snapshot → /work/pi_nwycoff_umass_edu/hang/auto/runs/idea008/design002/train_snapshot.py
+
+Building data splits ...
+  Loaded splits from /work/pi_nwycoff_umass_edu/hang/auto/splits_rome_tracking.json
+  Sequences — train: 100, val: 50
+  Frames  — train: 6314, val: 3316
+
+Building sapiens_0.3b ...
+[weights] patch_embed: 3ch → 4ch  (depth = mean of RGB channels)
+[weights] pos_embed: 64×64 → 40×24  (bicubic)
+[weights] DepthBucketPE: row_emb & col_emb init from pretrained 2D PE; depth_emb zero-initialized
+[weights] Loaded 292 / 297 backbone tensors
+[weights] Head (81 tensors) randomly initialised
+  Parameters: 307.9M
+
+Starting training for 20 epochs ...
+
+Epoch 1/20  lr_backbone=3.33e-06  lr_head=3.33e-05
+Epoch 1 [train]:   0%|          | 0/1579 [00:00<?, ?it/s]                                                         Epoch 1 [train]:   0%|          | 0/1579 [01:10<?, ?it/s]Epoch 1 [train]:   0%|          | 0/1579 [01:10<?, ?it/s, body=706.8mm, loss=0.5843, pelvis=2160.9mm, w=1186.7mm]Epoch 1 [train]:   0%|          | 1/1579 [01:10<31:02:39, 70.82s/it, body=706.8mm, loss=0.5843, pelvis=2160.9mm, w=1186.7mm]Epoch 1 [train]:   0%|          | 1/1579 [01:12<31:02:39, 70.82s/it, body=701.9mm, loss=0.5950, pelvis=2253.2mm, w=1213.8mm]Epoch 1 [train]:   0%|          | 2/1579 [01:12<13:13:13, 30.18s/it, body=701.9mm, loss=0.5950, pelvis=2253.2mm, w=1213.8mm][2026-04-09T04:35:33.977] error: *** JOB 55334064 ON gypsum-gpu147 CANCELLED AT 2026-04-09T04:35:33 DUE to SIGNAL Terminated ***

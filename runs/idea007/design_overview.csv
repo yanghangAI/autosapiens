@@ -1,4 +1,4 @@
 Design_ID,Design_Description,Status
-design001,Gentle LLRD on Depth-Bucket PE,Submitted
-design002,Strong LLRD on Depth-Bucket PE,Submitted
-design003,Strong LLRD with Earlier Unfreeze,Submitted
+design001,Gentle LLRD on Depth-Bucket PE,Training
+design002,Strong LLRD on Depth-Bucket PE,Training
+design003,Strong LLRD with Earlier Unfreeze,Training

@@ -1,7 +1,7 @@
 Design_ID,Design_Description,Status
 design001,Horizontal Flip,Training
 design002,Scale/Crop Jitter,Training
-design003,Color Jitter,Submitted
+design003,Color Jitter,Training
 design004,Depth Channel Augmentation,Submitted
-design005,Combined Geometric: Flip + Scale Jitter,Submitted
-design006,Full Stack: Flip + Color Jitter + Depth Noise,Submitted
+design005,Combined Geometric: Flip + Scale Jitter,Training
+design006,Full Stack: Flip + Color Jitter + Depth Noise,Training
