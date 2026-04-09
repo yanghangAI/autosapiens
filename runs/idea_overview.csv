@@ -5,5 +5,5 @@ idea003,Curriculum-Based Loss Weighting,Done
 idea004,Layer-Wise Learning Rate Decay & Progressive Unfreezing,Done
 idea005,Depth-Aware Positional Embeddings,Done
 idea006,Training Data Augmentation for Generalization,Implemented
-idea007,Depth-Bucket Positional Embeddings with Layer-Wise Fine-Tuning,Implemented
-idea008,Continuous Depth Positional Encoding,Designed
+idea007,Depth-Bucket Positional Embeddings with Layer-Wise Fine-Tuning,Training
+idea008,Continuous Depth Positional Encoding,Training
