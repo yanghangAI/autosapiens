@@ -210,7 +210,12 @@ class RandomHorizontalFlip:
 
 
 class RGBColorJitter:
-    """Apply ColorJitter to the RGB tensor only; depth is unchanged."""
+    """Apply ColorJitter to the RGB tensor only; depth is unchanged.
+
+    Applied after ToTensor, which ImageNet-normalizes the RGB. We un-normalize
+    to [0, 1] before ColorJitter and re-normalize afterward so the model input
+    distribution remains unchanged.
+    """
 
     def __init__(self, brightness=0.4, contrast=0.4, saturation=0.2, hue=0.1):
         self.jitter = T.ColorJitter(
@@ -219,14 +224,16 @@ class RGBColorJitter:
             saturation=saturation,
             hue=hue,
         )
+        self.mean = torch.tensor(RGB_MEAN, dtype=torch.float32).view(3, 1, 1)
+        self.std = torch.tensor(RGB_STD, dtype=torch.float32).view(3, 1, 1)
 
     def __call__(self, sample: dict) -> dict:
-        # sample["rgb"] is a float32 tensor of shape (3, H, W) in [0, 1]
-        # but it is ImageNet-normalized, so we need to un-normalize, jitter, re-normalize
-        # Actually per design.md: applied after ToTensor on float tensors in [0,1]
-        # The design says "sample['rgb'] is a float32 tensor of shape (3, H, W) in [0, 1]"
-        # but ToTensor normalizes with mean/std. We apply jitter to the normalized tensor.
-        sample["rgb"] = self.jitter(sample["rgb"])
+        rgb = sample["rgb"]
+        mean = self.mean.to(device=rgb.device, dtype=rgb.dtype)
+        std = self.std.to(device=rgb.device, dtype=rgb.dtype)
+        rgb = (rgb * std + mean).clamp(0.0, 1.0)
+        rgb = self.jitter(rgb)
+        sample["rgb"] = (rgb - mean) / std
         return sample
 
 
