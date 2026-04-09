@@ -10,7 +10,11 @@ RESULT_FIELDS = [
     "idea_id",
     "design_id",
     "epoch",
+    "train_mpjpe_body",
+    "train_pelvis_err",
     "train_mpjpe_weighted",
+    "val_mpjpe_body",
+    "val_pelvis_err",
     "val_mpjpe_weighted",
 ]
 
@@ -25,16 +29,34 @@ def parse_metrics_file(metrics_path: Path) -> ResultRecord | None:
     if not rows:
         return None
     last_row = rows[-1]
+    train_mpjpe_body = last_row.get("train_mpjpe_body")
+    train_pelvis_err = last_row.get("train_pelvis_err")
     train_mpjpe = last_row.get("train_mpjpe_weighted")
+    val_mpjpe_body = last_row.get("val_mpjpe_body")
+    val_pelvis_err = last_row.get("val_pelvis_err")
     val_mpjpe = last_row.get("val_mpjpe_weighted")
-    if train_mpjpe is None and val_mpjpe is None:
+    if all(
+        metric is None
+        for metric in (
+            train_mpjpe_body,
+            train_pelvis_err,
+            train_mpjpe,
+            val_mpjpe_body,
+            val_pelvis_err,
+            val_mpjpe,
+        )
+    ):
         return None
     idea_id, design_id = layout.parse_idea_design_from_metrics(metrics_path)
     return ResultRecord(
         idea_id=idea_id,
         design_id=design_id,
         epoch=last_row.get("epoch", ""),
+        train_mpjpe_body=train_mpjpe_body or "",
+        train_pelvis_err=train_pelvis_err or "",
         train_mpjpe_weighted=train_mpjpe or "",
+        val_mpjpe_body=val_mpjpe_body or "",
+        val_pelvis_err=val_pelvis_err or "",
         val_mpjpe_weighted=val_mpjpe or "",
     )
 
@@ -56,7 +78,11 @@ def summarize_results(root: Path | None = None) -> list[ResultRecord]:
             "idea_id": record.idea_id,
             "design_id": record.design_id,
             "epoch": record.epoch,
+            "train_mpjpe_body": record.train_mpjpe_body,
+            "train_pelvis_err": record.train_pelvis_err,
             "train_mpjpe_weighted": record.train_mpjpe_weighted,
+            "val_mpjpe_body": record.val_mpjpe_body,
+            "val_pelvis_err": record.val_pelvis_err,
             "val_mpjpe_weighted": record.val_mpjpe_weighted,
         }
         for record in records
