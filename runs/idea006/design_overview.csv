@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
-design001,Horizontal Flip,Training
+design001,Horizontal Flip,Done
 design002,Scale/Crop Jitter,Training
 design003,Color Jitter,Training
 design004,Depth Channel Augmentation,Training

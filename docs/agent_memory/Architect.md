@@ -82,6 +82,21 @@
 - **Key constraint for Designer:** Horizontal flip requires left-right joint swap in SMPLX topology and pelvis_uv[0] negation. Scale jitter modifies bbox before CropPerson; root-relative joints unaffected. Augmentations go into `build_train_transform()` only.
 - **idea_overview.csv status:** Updated to 'Not Designed'.
 
+### idea009 — Head Architecture Refinement
+- **Status:** Defined (2026-04-09). Design phase NOT yet started.
+- **Designs needed:** 5 novel designs.
+- **Baseline starting point:** `runs/idea004/design002/train.py` (best completed: 112.3 mm val_mpjpe_body)
+- **Key motivation:** No prior idea has varied the transformer decoder head. LLRD schedule is fixed to idea004/design002 (gamma=0.90, unfreeze=5) so gains are attributable to head changes only.
+- **Designs:**
+  - design001: 6-layer decoder (head_num_layers=6, head_hidden=256)
+  - design002: Wide head (head_num_layers=4, head_hidden=384, input_proj Linear(1024→384))
+  - design003: Sine-cosine joint query init (learnable but sinusoidal initialization for 70 queries)
+  - design004: Per-layer input feature gate (4 learned scalar gates on cross-attention input, init=1.0)
+  - design005: Output LayerNorm before final Linear(256→3)
+- **Category A axes:** derive from idea004/design002 and idea001/design003
+- **Category B axes:** query init priors, per-layer gating, output norm — all novel
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).

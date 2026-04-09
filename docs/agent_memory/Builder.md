@@ -1,7 +1,29 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
-- Idea: idea005/design003 (depth_conditioned_pe): IMPLEMENTED, TEST PASSED. Awaiting Designer review.
+- Idea: idea009/design003 (Sine-Cosine Joint Query Init): IMPLEMENTED, TEST PASSED. Awaiting Reviewer code review.
+
+## idea009/design003 Status
+- Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea009/design003/code/model.py
+- Test job: 55349223, PASSED
+- Final val body MPJPE: 547.5mm (2-epoch test run, proxy dataset)
+- Test output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea009/design003/test_output/
+- Change: model.py only — added `_sinusoidal_init` static method to Pose3DHead; added `import math`
+- `_init_weights`: replaced `trunc_normal_(self.joint_queries.weight, std=0.02)` with `self._sinusoidal_init(self.joint_queries)`
+- Verification: joint_queries[0, :4] = [0.0, 1.0, 0.0, 1.0] confirming sin(0)=0, cos(0)=1 as expected
+- GPU mem: 1.76GB batch1 / 2.92GB batch2 — fits 11GB VRAM
+
+## idea009/design002 Status
+- Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea009/design002/code/config.py
+- Test job: 55348946, PASSED
+- Final val body MPJPE: 1258.2mm (2-epoch test run, proxy dataset)
+- Test output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea009/design002/test_output/
+- Change: config.py head_hidden = 256 → 384; no structural code changes needed
+- model.py was already parameterized — hidden_dim flows through input_proj, joint_queries, decoder d_model, output heads
+- GPU mem: 1.80GB batch1 / 3.00GB batch2 — fits 11GB VRAM (wider head uses slightly more than 256 baseline)
+
+## idea009/design001 Status
+- Status: APPROVED by Reviewer, marked Implemented via sync-status.
 
 ## idea005/design003 Status
 - Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea005/design003/code/model.py
