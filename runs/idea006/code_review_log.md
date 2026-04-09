@@ -1,6 +1,15 @@
 
 ---
 
+## idea006/design002 — Code Review
+
+**Date:** 2026-04-09
+**Verdict:** APPROVED
+
+`RandomScaleJitter` class matches the design spec precisely: `low=0.8, high=1.2`, bbox format `[x_min, y_min, x_max, y_max]`, half-extents scaled by `s` around center with center unchanged, `bbox.copy()` to avoid aliasing, and a defensive guard when bbox is absent. Pipeline order is `[RandomScaleJitter, CropPerson, SubtractRoot, ToTensor]` — exactly as specified. Out-of-bound handling delegated to `CropPerson` padding as permitted. `build_val_transform` is unchanged. All 17 config fields match exactly. `train.py` and `model.py` are unchanged from baseline as specified. No bugs found.
+
+---
+
 ## idea006/design001 — Code Review
 
 **Date:** 2026-04-08
