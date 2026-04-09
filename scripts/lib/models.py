@@ -56,5 +56,9 @@ class ResultRecord:
     idea_id: str
     design_id: str
     epoch: str
+    train_mpjpe_body: str
+    train_pelvis_err: str
     train_mpjpe_weighted: str
+    val_mpjpe_body: str
+    val_pelvis_err: str
     val_mpjpe_weighted: str
