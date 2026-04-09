@@ -6,7 +6,8 @@ from pathlib import Path
 from scripts.lib import layout, store
 
 
-GITHUB_REPO_URL = "https://github.com/yanghangAI/MultiAgentAutoResearch"
+GITHUB_REPO_URL = "https://github.com/yanghangAI/autosapiens"
+TRY_AUTO_RESEARCH_URL = "https://github.com/yanghangAI/MultiAgentAutoResearch"
 
 
 def is_baseline_result(idea_id: str, design_id: str) -> bool:
@@ -94,7 +95,10 @@ def render_dashboard(context: dict[str, list[dict[str, object]]]) -> str:
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="mb-0">AutoSapiens Dashboard</h1>
-            <a href="https://github.com/yanghangAI/MultiAgentAutoResearch" target="_blank" class="btn btn-outline-dark">View on GitHub</a>
+            <div class="d-flex gap-2">
+                <a href="https://github.com/yanghangAI/autosapiens" target="_blank" class="btn btn-outline-dark">View on GitHub</a>
+                <a href="https://github.com/yanghangAI/MultiAgentAutoResearch" target="_blank" class="btn btn-dark">Try auto research in your project</a>
+            </div>
         </div>
 
         <h2 class="mt-5">Results Overview</h2>
