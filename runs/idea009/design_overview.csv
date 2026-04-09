@@ -1,6 +1,6 @@
 Design_ID,Design_Description,Status
 design001,6-Layer Decoder,Training
-design002,Wide Head hidden_dim=384,Submitted
-design003,Sine-Cosine Joint Query Init,Submitted
+design002,Wide Head hidden_dim=384,Training
+design003,Sine-Cosine Joint Query Init,Training
 design004,Per-Layer Input Feature Gate,Not Implemented
 design005,Output LayerNorm,Not Implemented
