@@ -14,11 +14,30 @@ Before designing the search space, read the following files thoroughly:
 Identify what design decisions are currently hardcoded in your chosen baseline (architecture, fusion strategy, loss, input representation, etc.) and consider which of them could reasonably be varied.
 
 **Step 2 — Broader Reflection on Past Experiments.**
-Before proposing new ideas, you must reflect on the trajectory of the project. Read `runs/idea_overview.csv` to understand what ideas have already been proposed, ensuring you do not generate duplicates. Run `python scripts/cli.py summarize-results` in the terminal to generate or update `results.csv`. Then, carefully read `results.csv` to analyze the performance (e.g., `val_mpjpe_weighted`) of previous ideas and designs.
-Synthesize these findings: Which architectural changes improved the MPJPE? Which resulted in poor convergence or OOM errors? Use this broader reflection to explicitly identify promising directions to double-down on and dead-ends to avoid. Write down your reflections quietly in your memory before proceeding.
+Read `runs/idea_overview.csv` and `results.csv` to identify what has been tried, what performed well, and what patterns have emerged.
+Based on what you see in those two files, selectively read the `idea.md` or `design.md` of any past idea or design that seems important — for example, a top-performing idea you want to build on, or one that looks similar to a direction you're considering. Do not attempt to read all past ideas and designs; only read the ones that are genuinely relevant to your proposal.
+
+Synthesize these findings: Which architectural changes improved the MPJPE? Which resulted in poor convergence or OOM errors? Use this broader reflection to explicitly identify promising directions to double-down on and dead-ends to avoid.
 
 **Step 3 — Propose your own design axes.**
-Based on your broader reflection of the baseline and past results, independently propose a novel set of architectural and pipeline design axes you want to explore. You are not constrained to any predefined list. Be creative but practical — each axis must be implementable within `train.py` in 20-epoch proxy runs. For each axis you propose, briefly note why you think varying it could meaningfully affect MPJPE.
+Based on your broader reflection of the baseline and past results, independently propose a novel set of architectural and pipeline design axes you want to explore. Each axis must fall into one of two categories:
+
+---
+
+### Category A — Exploit & Extend
+Build on axes from previous runs that achieved the **lowest MPJPE**. Valid moves:
+- **Refine**: Narrow a range that showed a clear trend
+- **Combine**: Pair two independently strong ideas together for the first time
+- **Scale**: Apply a winning config more aggressively or systematically
+
+For each Category A axis, **explicitly state which prior result it derives from**.
+
+---
+
+### Category B — Novel Exploration
+Propose axes **not tried in any previous run**. Must be implementable inside `train.py` within a 20-epoch proxy run.
+
+---
 
 Once you have generated your ideas, you must organize them systematically:
 1. Check `runs/idea_overview.csv` to determine the next available Idea ID (e.g., `idea001`, `idea002`, etc., incrementing from the highest existing ID).

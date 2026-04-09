@@ -1,6 +1,42 @@
 
 ---
 
+## idea006/design006 — Code Review
+
+**Date:** 2026-04-09
+**Verdict:** APPROVED
+
+`RGBColorJitter` now unnormalizes ImageNet-normalized RGB to `[0,1]` before `ColorJitter` and renormalizes afterward; `RandomHorizontalFlip` and `DepthAugmentation` remain correct, config/train/model are unchanged, and the sanity check passed.
+
+---
+
+## idea006/design005 — Code Review
+
+**Date:** 2026-04-09
+**Verdict:** APPROVED
+
+Combined geometric augmentation matches the design: `RandomScaleJitter(0.8, 1.2)` runs before `CropPerson`, `RandomHorizontalFlip` runs after crop and before `SubtractRoot`, RGB/depth flip logic and joint/pair handling are correct, config matches spec, and `train.py`/`model.py` remain unchanged.
+
+---
+
+## idea006/design004 — Code Review
+
+**Date:** 2026-04-09
+**Verdict:** APPROVED
+
+DepthAugmentation matches the design: Gaussian noise (`sigma=0.02`) and 10% pixel dropout each fire with `p=0.5` after `ToTensor`; RGB and labels remain untouched; config matches spec; `train.py`/`model.py` unchanged.
+
+---
+
+## idea006/design003 — Code Review
+
+**Date:** 2026-04-09
+**Verdict:** APPROVED
+
+RGBColorJitter matches the design: exact jitter params, RGB-only application after `ToTensor`, depth untouched, config matches spec, `train.py`/`model.py` unchanged; wrapper safely unnormalizes and re-normalizes around torchvision jitter.
+
+---
+
 ## idea006/design002 — Code Review
 
 **Date:** 2026-04-09

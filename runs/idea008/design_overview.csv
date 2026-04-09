@@ -1,0 +1,5 @@
+Design_ID,Design_Description,Status
+design001,Continuous Interpolated Depth PE,Not Implemented
+design002,Interpolated Depth PE with Residual Gate,Not Implemented
+design003,Interpolated Depth PE with Near-Emphasized Spacing,Not Implemented
+design004,Hybrid Two-Resolution Depth PE,Not Implemented
