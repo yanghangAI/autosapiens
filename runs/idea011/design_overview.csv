@@ -1,0 +1,5 @@
+Design_ID,Design_Name,Status
+design001,LLRD gamma=0.90 + sqrt Depth PE,Not Implemented
+design002,LLRD gamma=0.85 + sqrt Depth PE,Not Implemented
+design003,LLRD gamma=0.90 unfreeze=10 + sqrt Depth PE,Not Implemented
+design004,LLRD gamma=0.90 + gated Depth PE,Not Implemented

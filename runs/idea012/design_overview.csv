@@ -1,0 +1,6 @@
+Design_ID,Design_Name,Status
+design001,Head Dropout 0.2,Not Implemented
+design002,Weight Decay 0.3,Not Implemented
+design003,Stochastic Depth 0.2,Not Implemented
+design004,R-Drop Consistency,Not Implemented
+design005,Combined Regularization,Not Implemented

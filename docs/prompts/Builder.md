@@ -2,7 +2,7 @@
 
 **Context:** The model predicts 3D human joints (MPJPE) from RGBD features. The user has already created a tiny dataset subset for this inner-loop proxy. The `baseline/` folder (`train.py`, `config.py`, `model.py`, `transforms.py`) uses `mmpretrain.models.backbones.vision_transformer` where the backbone requires an image dimension and patch configurations. Use it as reference for defining your components.
 
-**Task:** The Orchestrator will spawn you and provide a specific `Idea_ID`. For that specific idea, open its internal overview (e.g., `runs/idea001/design_overview.csv`) to figure out which explicit designs are currently 'Not Implemented'. You must implement them one by one. For each unimplemented design:
+**Task:** The Orchestrator will spawn you and provide a specific `Idea_ID`. You are responsible for implementing and testing **all** unimplemented designs for this idea in a single run. For that specific idea, open its internal overview (e.g., `runs/idea001/design_overview.csv`) to figure out which explicit designs are currently 'Not Implemented'. You must implement them one by one. For each unimplemented design:
 1. Read the `design.md` file inside the corresponding design folder (e.g., `runs/idea001/design001/design.md`) to understand the specific design's details. You must run:
    ```
    python scripts/cli.py setup-design <src_folder> <dst_design_folder>
@@ -10,15 +10,15 @@
    ```
    using the exact starting-point path explicitly specified in `design.md` as the `<src_folder>`. The setup-design tool enforces that design-to-design bootstrapping can only use sources whose status is at least `Implemented`. Do this before starting implementation.
 2. Modify only the files inside the `code/` subfolder that the design requires. Experiment-specific hyperparameters (LR, head dims, loss weights, epochs, etc.) belong in `code/config.py`. Architectural or loop changes go in `code/train.py` or `code/model.py`. Do not touch files the design does not require changes to.
-4. Test your implementation without altering it further by using the wrapper script, passing the design folder (not the `code/` subfolder):
+3. Test your implementation without altering it further by using the wrapper script, passing the design folder (not the `code/` subfolder):
    ```
    python scripts/cli.py submit-test runs/idea001/design001/
    ```
    This command submits the sanity-check job and writes output to `<design_folder>/test_output/`. The test run will take approximately 2-3 minutes; use `squeue --me` in a bash terminal to monitor its status, and stay active so you do not lose context while waiting. Once finished, check the SLURM output log (`<design_folder>/test_output/slurm_test_<jobid>.out`) to confirm there are no crashes/OOM errors. Also verify that it successfully generated `metrics.csv` and `iter_metrics.csv` in `<design_folder>/test_output/`, and that the final MPJPE is printed to stdout.
-5. If the test run fails, you must iteratively debug and fix the code until the test passes.
-6. Once the implementation passes the test, explicitly tell the Orchestrator the path to your `train.py` code and ask it to spawn the **Designer** to review it. The Designer will check if the code aligns with `design.md` and save its feedback in a `code_review.md` file. The Orchestrator will return the path to the review file to you. You must read the file to get the feedback. If the Designer REJECTS the code, you must fix the code, test it again, and ask the Orchestrator for another review. You must loop this until the Designer explicitly APPROVES the code.
-7. Only after the Designer approves the implementation, tell the Orchestrator to run `python scripts/cli.py sync-status` to update the design's status to 'Implemented'.
-8. After completing a design, stop and report back to the Orchestrator. Tell it which design was just completed and ask whether to proceed to the next 'Not Implemented' design. Do not move on independently.
+4. If the test run fails, you must iteratively debug and fix the code until the test passes.
+5. Once the test passes, immediately proceed to the next 'Not Implemented' design by repeating Steps 1–4.
+6. After **all** designs have been implemented and pass the sanity test, report back to the Orchestrator with the list of all completed design folder paths. The Orchestrator will then have the Reviewer batch-review the code.
+7. If the Orchestrator re-spawns you with Reviewer rejection feedback (a list of rejected design paths and their `code_review.md` files), read each review, fix the corresponding code, re-run the sanity test, and return the updated paths to the Orchestrator for re-review. Repeat until all code is approved.
 
 **Rules:**
 

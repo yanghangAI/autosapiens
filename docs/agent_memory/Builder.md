@@ -1,7 +1,53 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
-- Idea: idea009/design003 (Sine-Cosine Joint Query Init): IMPLEMENTED, TEST PASSED. Awaiting Reviewer code review.
+- Idea: idea011 (LLRD + Depth PE Combination): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea011 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs):
+- design001 (LLRD gamma=0.90, unfreeze=5, sqrt depth PE): PASSED, val body MPJPE = 533.4mm, job 55375879
+- design002 (LLRD gamma=0.85, unfreeze=5, sqrt depth PE): PASSED, val body MPJPE = 522.8mm, job 55375886
+- design003 (LLRD gamma=0.90, unfreeze=10, sqrt depth PE): PASSED, val body MPJPE = 533.4mm, job 55375887
+- design004 (LLRD gamma=0.90, unfreeze=5, gated depth PE): PASSED, val body MPJPE = 533.4mm, job 55375888
+
+Key implementation pattern:
+- All designs share same train.py LLRD logic; only config.py differs (gamma, unfreeze_epoch)
+- Designs 001-003 from idea008/design003 (sqrt-spaced continuous depth PE)
+- Design 004 from idea008/design002 (gated continuous depth PE with depth_gate param)
+- model.py unchanged in all designs
+- _build_optimizer_frozen(): blocks 0-11 frozen, train blocks 12-23 + depth_pe + head (14 groups)
+- _build_optimizer_full(): all unfrozen, 27 groups (embed + 24 blocks + depth_pe + head)
+- Optimizer rebuild at unfreeze_epoch with initial_lr set and LR scale applied
+
+## Previous Task
+- Idea: idea012 (Regularization Strategies): ALL 5 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea012 Status
+All 5 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea004/design002/:
+- design001 (Head Dropout 0.2): PASSED, val body MPJPE = 555.2mm, job 55375881. Config-only: head_dropout 0.1->0.2
+- design002 (Weight Decay 0.3): PASSED, val body MPJPE = 520.7mm, job 55375882. Config-only: weight_decay 0.03->0.3
+- design003 (Stochastic Depth 0.2): PASSED, val body MPJPE = 521.4mm, job 55375883. Config-only: drop_path 0.1->0.2
+- design004 (R-Drop Consistency): PASSED, val body MPJPE = 540.1mm, job 55375884. Config: rdrop_alpha=1.0. Train.py: second no_grad forward pass, MSE consistency loss on body joints
+- design005 (Combined Regularization): PASSED, val body MPJPE = 545.9mm, job 55375885. Config-only: head_dropout=0.2, weight_decay=0.2, drop_path=0.2
+
+## Previous Task
+- Idea: idea010 (Multi-Scale Backbone Feature Aggregation): ALL 5 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea010 Status
+All 5 designs implemented and sanity-tested (2-epoch proxy runs):
+- design001 (Last-4-Layer Concat + Linear Proj): PASSED, val body MPJPE = 605.0mm, job 55374930
+- design002 (Learned Layer Weights): PASSED, val body MPJPE = 513.5mm, job 55375139
+- design003 (Feature Pyramid 3 Scales): PASSED, val body MPJPE = 612.5mm, job 55375141
+- design004 (Cross-Scale Attention Gate): PASSED, val body MPJPE = 789.5mm, job 55375143
+- design005 (Alternating Layer Average): PASSED, val body MPJPE = 594.7mm, job 55375144
+
+Key implementation pattern for all designs:
+- Custom backbone forward: `_run_vit_preamble()` replicates VisionTransformer preamble (patch_embed, resize_pos_embed, drop_after_pos, pre_norm), then manually iterates self.vit.layers
+- `resize_pos_embed` imported from mmpretrain for correct pos_embed handling
+- Designs 001-004 add aggregator module with own param group (lr=lr_head) in both optimizer builders
+- Design005 has zero new params (averaging done in backbone forward)
+
+## Previous Task
 
 ## idea009/design003 Status
 - Path: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea009/design003/code/model.py
