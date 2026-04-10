@@ -1,6 +1,6 @@
 Design_ID,Design_Name,Status
-design001,Last-4-Layer Concatenation + Linear Projection,Training
-design002,Learned Layer Weights (Softmax-Weighted Sum),Training
-design003,Feature Pyramid with 3 Scales,Training
-design004,Cross-Scale Attention Gate,Training
-design005,Alternating Layer Average,Training
+design001,Last-4-Layer Concatenation + Linear Projection,Done
+design002,Learned Layer Weights (Softmax-Weighted Sum),Done
+design003,Feature Pyramid with 3 Scales,Done
+design004,Cross-Scale Attention Gate,Done
+design005,Alternating Layer Average,Done
