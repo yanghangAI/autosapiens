@@ -7,9 +7,9 @@ idea005,Depth-Aware Positional Embeddings,Done
 idea006,Training Data Augmentation for Generalization,Done
 idea007,Depth-Bucket Positional Embeddings with Layer-Wise Fine-Tuning,Done
 idea008,Continuous Depth Positional Encoding,Done
-idea009,Head Architecture Refinement,Training
+idea009,Head Architecture Refinement,Done
 idea010,Multi-Scale Backbone Feature Aggregation,Training
 idea011,LLRD with Continuous Depth PE,Training
 idea012,Regularization for Generalization,Training
-idea013,Joint Prediction Loss Reformulation,Implemented
-idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Implemented
+idea013,Joint Prediction Loss Reformulation,Training
+idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Training

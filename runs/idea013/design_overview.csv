@@ -1,5 +1,5 @@
 Design_ID,Design_Name,Status
-design001,Small-beta Smooth L1 (beta=0.01),Submitted
-design002,Large-beta Smooth L1 (beta=0.1),Submitted
-design003,Bone-length Auxiliary Loss,Submitted
-design004,Hard-joint-weighted Loss,Submitted
+design001,Small-beta Smooth L1 (beta=0.01),Training
+design002,Large-beta Smooth L1 (beta=0.1),Training
+design003,Bone-length Auxiliary Loss,Training
+design004,Hard-joint-weighted Loss,Training
