@@ -6,5 +6,5 @@ idea004,Layer-Wise Learning Rate Decay & Progressive Unfreezing,Done
 idea005,Depth-Aware Positional Embeddings,Done
 idea006,Training Data Augmentation for Generalization,Training
 idea007,Depth-Bucket Positional Embeddings with Layer-Wise Fine-Tuning,Done
-idea008,Continuous Depth Positional Encoding,Training
-idea009,Head Architecture Refinement,Designed
+idea008,Continuous Depth Positional Encoding,Done
+idea009,Head Architecture Refinement,Training

@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
-design001,Continuous Interpolated Depth PE,Training
-design002,Interpolated Depth PE with Residual Gate,Training
-design003,Interpolated Depth PE with Near-Emphasized Spacing,Training
-design004,Hybrid Two-Resolution Depth PE,Training
+design001,Continuous Interpolated Depth PE,Done
+design002,Interpolated Depth PE with Residual Gate,Done
+design003,Interpolated Depth PE with Near-Emphasized Spacing,Done
+design004,Hybrid Two-Resolution Depth PE,Done
