@@ -97,6 +97,49 @@
 - **Category B axes:** query init priors, per-layer gating, output norm — all novel
 - **idea_overview.csv status:** Updated to 'Not Designed'.
 
+### idea010 — Multi-Scale Backbone Feature Aggregation
+- **Status:** Defined (2026-04-10). Design phase NOT yet started.
+- **Designs needed:** 5 novel designs.
+- **Baseline starting point:** `runs/idea004/design002/train.py` (best completed: 112.3 mm val_mpjpe_body)
+- **Key motivation:** All prior ideas consume only the final ViT layer output. Intermediate layers encode complementary spatial/structural info. Multi-scale aggregation (DPT/ViTDet-style) is standard in dense prediction but untried here.
+- **Designs:**
+  - design001: Last-4-layer concatenation + Linear(4096->1024) projection
+  - design002: Last-4-layer learned weighted sum (4 softmax scalars)
+  - design003: Feature pyramid from layers {4,8,12}, project each to 256ch, concat+project
+  - design004: Cross-scale attention gate from layer 6 applied to layer 12
+  - design005: Alternating layer average (layers {2,4,6,8,10,12}), zero extra params
+- **Category A axes:** derive from idea004/design002 (best LLRD schedule) + standard multi-layer ViT feature usage
+- **Category B axes:** feature pyramid, cross-scale gating, alternating average — all novel
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
+### idea011 — LLRD with Continuous Depth PE
+- **Status:** Defined (2026-04-10). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea008/design003/code/` (best completed: 112.0 mm val_mpjpe_weighted, 93.7 mm pelvis)
+- **Key motivation:** Combine the two best orthogonal improvements: LLRD from idea004/design002 (best body MPJPE 112.3) and continuous depth PE from idea008/design003 (best weighted MPJPE 112.0). Never combined before. idea007 tried a weaker depth PE + LLRD combo and failed, but used bucketed (not continuous) depth PE.
+- **Designs:**
+  - design001: LLRD gamma=0.90, unfreeze=5 + sqrt continuous depth PE
+  - design002: LLRD gamma=0.85, unfreeze=5 + sqrt continuous depth PE
+  - design003: LLRD gamma=0.90, unfreeze=10 + sqrt continuous depth PE
+  - design004: LLRD gamma=0.90, unfreeze=5 + gated continuous depth PE (from idea008/design002)
+- **Category A axes:** all 4 designs combine independently strong ideas (exploit & extend)
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
+### idea012 — Regularization for Generalization
+- **Status:** Defined (2026-04-10). Design phase NOT yet started.
+- **Designs needed:** 5 novel designs.
+- **Baseline starting point:** `runs/idea004/design002/train.py` (best completed: 112.3 mm val_mpjpe_body)
+- **Key motivation:** Persistent 22-30 mm train-val gap across ALL completed experiments indicates overfitting. No prior idea has varied dropout, weight decay, stochastic depth, or added explicit regularization. idea006 tried augmentation (input-side) with mixed results; this targets model-side regularization.
+- **Designs:**
+  - design001: head_dropout=0.2 (up from 0.1)
+  - design002: weight_decay=0.3 (up from 0.1)
+  - design003: drop_path_rate=0.2 (up from 0.1)
+  - design004: R-Drop consistency loss (MSE between two stochastic forward passes, alpha=1.0)
+  - design005: Combined regularization (dropout=0.2 + weight_decay=0.2 + drop_path=0.2)
+- **Category A axes:** dropout and weight decay scaling (existing knobs never tuned)
+- **Category B axes:** stochastic depth increase, R-Drop, combined regularization — all novel
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).
