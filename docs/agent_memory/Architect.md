@@ -140,6 +140,32 @@
 - **Category B axes:** stochastic depth increase, R-Drop, combined regularization — all novel
 - **idea_overview.csv status:** Updated to 'Not Designed'.
 
+### idea013 — Joint Prediction Loss Reformulation
+- **Status:** Defined (2026-04-10). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea004/design002/train.py` (best completed: 112.3 mm val_mpjpe_body)
+- **Key motivation:** Every experiment uses Smooth L1 (beta=0.05) with equal joint weights. The loss function itself has never been varied. This is a fundamental and unexplored axis.
+- **Designs:**
+  - design001: Small-beta Smooth L1 (beta=0.01) — more L1-like, stronger gradients for medium errors
+  - design002: Large-beta Smooth L1 (beta=0.1) — more L2-like, stronger early convergence
+  - design003: Bone-length auxiliary loss (lambda_bone=0.1) — soft anatomical consistency from SMPLX_SKELETON edges
+  - design004: Hard-joint-weighted loss — one-shot per-joint reweighting after epoch 0 based on error magnitude
+- **Category A axes:** beta tuning (refining existing Smooth L1 parameter)
+- **Category B axes:** bone-length loss, hard-joint weighting — both novel
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
+### idea014 — Best-of-Breed Combination: LLRD + Depth PE + Wide Head
+- **Status:** Defined (2026-04-10). Design phase NOT yet started.
+- **Designs needed:** 3 novel designs.
+- **Baseline starting point:** `runs/idea008/design003/code/` (best completed: 112.0 mm val_mpjpe_weighted, 93.7 mm pelvis)
+- **Key motivation:** Three independently strong improvements (LLRD, continuous depth PE, wide head) have never been combined. Each modifies a different model component. idea011 tests LLRD+depth PE; this adds wide head to the mix and tests pairwise/triple combinations.
+- **Designs:**
+  - design001: Depth PE + Wide Head (no LLRD) — pairwise combination
+  - design002: LLRD + Depth PE + Wide Head — full triple combination
+  - design003: LLRD + Depth PE + Wide Head + weight_decay=0.3 — triple with regularization
+- **Category A axes:** all 3 designs combine independently proven winners (exploit & extend)
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).
