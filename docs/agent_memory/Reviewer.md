@@ -62,3 +62,17 @@ idea012/design002 (code) reviewed on 2026-04-10. Approved: weight_decay=0.3; con
 idea012/design003 (code) reviewed on 2026-04-10. Approved: drop_path=0.2; config-only change.
 idea012/design004 (code) reviewed on 2026-04-10. Approved: R-Drop MSE consistency alpha=1.0; no_grad second pass; body joints only; train.py change correct.
 idea012/design005 (code) reviewed on 2026-04-10. Approved: combined head_dropout=0.2 + weight_decay=0.2 + drop_path=0.2; config-only change.
+idea013/design001 reviewed on 2026-04-10. Approved: small-beta Smooth L1 (beta=0.01); single constant change in train.py; all config fields specified.
+idea013/design002 reviewed on 2026-04-10. Approved: large-beta Smooth L1 (beta=0.1); single constant change in train.py; all config fields specified.
+idea013/design003 reviewed on 2026-04-10. Approved: bone-length auxiliary loss (lambda_bone=0.1); 21 body edges from SMPLX_SKELETON; no new params; all config fields specified.
+idea013/design004 reviewed on 2026-04-10. Approved: hard-joint-weighted loss; one-shot weights after epoch 0; clamp [0.5,2.0] sum=22; all config fields specified.
+idea014/design001 reviewed on 2026-04-10. Approved: depth PE + wide head (hidden=384) no LLRD; config-only change (head_hidden=384); flat optimizer preserved; all 19 config fields specified.
+idea014/design002 reviewed on 2026-04-10. Approved: LLRD + depth PE + wide head triple combo; gamma=0.90 unfreeze=5; depth PE at head-level LR; all 21 config fields specified.
+idea014/design003 reviewed on 2026-04-10. Approved: triple combo + weight_decay=0.3; config-only variant of design002; all 21 config fields specified.
+idea013/design001 (code) reviewed on 2026-04-10. Approved: F.smooth_l1_loss beta=0.01; single change in train.py; depth/UV losses unchanged; all config fields correct; LLRD logic correct.
+idea013/design002 (code) reviewed on 2026-04-10. Approved: F.smooth_l1_loss beta=0.1; single change in train.py; all config fields correct; LLRD logic correct.
+idea013/design003 (code) reviewed on 2026-04-10. Approved: bone_length_loss from SMPLX_SKELETON body edges; 0.1*l_bone in loss; all config fields correct.
+idea013/design004 (code) reviewed on 2026-04-10. Approved: one-shot joint weights after epoch 0; clamp [0.5,2.0] sum=22; weighted per-joint Smooth L1; err_accum dict pattern; all config fields correct.
+idea014/design001 (code) reviewed on 2026-04-10. Approved: head_hidden=384 config-only; flat 3-group optimizer (backbone 1e-5, depth_pe 1e-4, head 1e-4); DepthBucketPE with sqrt spacing; all config fields correct.
+idea014/design002 (code) reviewed on 2026-04-10. Approved: triple combo LLRD+depth PE+wide head; per-block LLRD gamma=0.90; freeze/unfreeze at epoch 5; depth PE at head-level LR; 14->27 groups; all config fields correct.
+idea014/design003 (code) reviewed on 2026-04-10. Approved: config-only variant of design002 with weight_decay=0.3; train.py/model.py identical to design002.

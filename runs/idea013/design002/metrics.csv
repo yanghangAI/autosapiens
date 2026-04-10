@@ -1,0 +1,1 @@
+epoch,lr_backbone,lr_head,train_loss,train_loss_pose,train_mpjpe_body,train_pelvis_err,train_mpjpe_weighted,val_loss,val_loss_pose,val_mpjpe_body,val_pelvis_err,val_mpjpe_weighted,epoch_time

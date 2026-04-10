@@ -1,6 +1,31 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- Idea: idea013 (Loss Function Variants): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea013 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea004/design002/:
+- design001 (Small-Beta Smooth L1, beta=0.01): PASSED, val body MPJPE = 523.7mm, job 55387840. Train.py only: replaced pose_loss() with F.smooth_l1_loss(..., beta=0.01)
+- design002 (Large-Beta Smooth L1, beta=0.1): PASSED, val body MPJPE = 525.1mm, job 55387841. Train.py only: replaced pose_loss() with F.smooth_l1_loss(..., beta=0.1)
+- design003 (Bone-Length Auxiliary Loss): PASSED, val body MPJPE = 525.1mm, job 55387842. Train.py only: added bone_length_loss() using BODY_BONES from SMPLX_SKELETON, lambda_bone=0.1
+- design004 (Hard-Joint-Weighted Loss): PASSED, val body MPJPE = 503.8mm, job 55387843. Train.py only: epoch 0 collects per-joint errors, computes weights clamped [0.5, 2.0], applies weighted smooth_l1_loss for epochs 1+
+
+## Previous Task
+- Idea: idea014 (Triple Combination: Depth PE + Wide Head +/- LLRD): ALL 3 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea014 Status
+All 3 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea008/design003/:
+- design001 (Depth PE + Wide Head, no LLRD): PASSED, val body MPJPE = 755.3mm, job 55387836. Config-only: head_hidden 256->384
+- design002 (LLRD + Depth PE + Wide Head): PASSED, val body MPJPE = 1188.5mm, job 55387837. Config: head_hidden=384, lr_backbone=1e-4, gamma=0.90, unfreeze_epoch=5. Train.py: LLRD optimizer logic from idea011
+- design003 (LLRD + Depth PE + Wide Head + WD 0.3): PASSED, val body MPJPE = 1166.4mm, job 55387838. Same as design002 but weight_decay=0.3
+
+Key implementation pattern:
+- All designs from idea008/design003 (sqrt-spaced continuous depth PE)
+- Design001: config-only change (head_hidden=384), flat optimizer unchanged
+- Designs 002-003: identical train.py with LLRD logic (ported from idea011), differ only in config weight_decay
+- model.py unchanged in all designs (head parameterized via hidden_dim from config)
+
+## Previous Task
 - Idea: idea011 (LLRD + Depth PE Combination): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
 
 ## idea011 Status

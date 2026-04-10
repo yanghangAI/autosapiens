@@ -24,3 +24,13 @@
   - design003: Stochastic depth 0.2 (drop_path=0.2). Config-only change.
   - design004: R-Drop consistency (rdrop_alpha=1.0). New config field + train.py loop change (second no_grad forward pass, MSE on body joints).
   - design005: Combined regularization (head_dropout=0.2, weight_decay=0.2, drop_path=0.2). Config-only change.
+2026-04-10: Drafted idea014 (Best-of-Breed Combination: LLRD + Depth PE + Wide Head). 3 designs, all from runs/idea008/design003.
+  - design001: Depth PE + Wide Head (no LLRD). head_hidden=384, flat optimizer (lr_backbone=1e-5). Config-only change.
+  - design002: LLRD + Depth PE + Wide Head (triple combo). head_hidden=384, gamma=0.90, unfreeze_epoch=5, lr_backbone=1e-4. train.py needs LLRD logic from idea004/design002.
+  - design003: Same as design002 but weight_decay=0.3 (from 0.03). Regularization counterbalance for larger param space.
+2026-04-10: Drafted idea013 (Joint Prediction Loss Reformulation). 4 designs, all from runs/idea004/design002.
+  - design001: Small-beta Smooth L1 (beta=0.01). Single line change in train.py.
+  - design002: Large-beta Smooth L1 (beta=0.1). Single line change in train.py.
+  - design003: Bone-length auxiliary loss (lambda_bone=0.1). 21 body-only edges from SMPLX_SKELETON. New bone_length_loss function in train.py.
+  - design004: Hard-joint-weighted loss. One-shot per-joint weight computation after epoch 0, clamp [0.5, 2.0], normalize to sum=22. Weighted Smooth L1 for epochs 1-19.
+  Key note: pose_loss() in infra.py uses beta=0.05. Designs 1-2 bypass it with direct F.smooth_l1_loss call. Body joints are indices 0-21 (BODY_IDX = slice(0,22)).

@@ -11,3 +11,5 @@ idea009,Head Architecture Refinement,Training
 idea010,Multi-Scale Backbone Feature Aggregation,Training
 idea011,LLRD with Continuous Depth PE,Training
 idea012,Regularization for Generalization,Training
+idea013,Joint Prediction Loss Reformulation,Implemented
+idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Implemented
