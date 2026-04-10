@@ -53,3 +53,12 @@ idea012/design002 reviewed on 2026-04-10. Approved: weight_decay 0.03->0.3; conf
 idea012/design003 reviewed on 2026-04-10. Approved: drop_path 0.1->0.2; config-only change.
 idea012/design004 reviewed on 2026-04-10. Approved: R-Drop MSE consistency alpha=1.0; no_grad second pass; body joints only; train.py change.
 idea012/design005 reviewed on 2026-04-10. Approved: combined head_dropout=0.2 + weight_decay=0.2 + drop_path=0.2; config-only change.
+idea011/design001 (code) reviewed on 2026-04-10. Approved: LLRD gamma=0.90 unfreeze=5 + sqrt depth PE; all 19 config fields correct; LLRD logic, freeze/unfreeze, depth PE grouping all match design; model.py/transforms.py unchanged from idea008/design003.
+idea011/design002 (code) reviewed on 2026-04-10. Approved: config-only variant of d001 (gamma=0.85); train.py identical, parameterized.
+idea011/design003 (code) reviewed on 2026-04-10. Approved: config-only variant of d001 (unfreeze_epoch=10); train.py identical, parameterized.
+idea011/design004 (code) reviewed on 2026-04-10. Approved: LLRD gamma=0.90 unfreeze=5 + gated depth PE; model.py from idea008/design002 with depth_gate; depth_gate auto-captured in depth_pe group.
+idea012/design001 (code) reviewed on 2026-04-10. Approved: head_dropout=0.2; config-only change from idea004/design002 baseline.
+idea012/design002 (code) reviewed on 2026-04-10. Approved: weight_decay=0.3; config-only change.
+idea012/design003 (code) reviewed on 2026-04-10. Approved: drop_path=0.2; config-only change.
+idea012/design004 (code) reviewed on 2026-04-10. Approved: R-Drop MSE consistency alpha=1.0; no_grad second pass; body joints only; train.py change correct.
+idea012/design005 (code) reviewed on 2026-04-10. Approved: combined head_dropout=0.2 + weight_decay=0.2 + drop_path=0.2; config-only change.

@@ -939,3 +939,201 @@ Successfully summarized 35 results into /work/pi_nwycoff_umass_edu/hang/auto/res
 Sync complete.
 Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
 Dashboard deployed to gh-pages.
+[main d6205c4] Auto-commit results [2026-04-10 04:08:02 UTC]
+ Committer: Hang Yang <hangyang_umass_edu@login1.unity.rc.umass.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 207 files changed, 49124 insertions(+), 79 deletions(-)
+ create mode 100644 runs/idea010/code_review_log.md
+ create mode 100644 runs/idea010/design001/code/config.py
+ create mode 100644 runs/idea010/design001/code/model.py
+ create mode 100644 runs/idea010/design001/code/train.py
+ create mode 100644 runs/idea010/design001/code/transforms.py
+ create mode 100644 runs/idea010/design001/code_review.md
+ create mode 100644 runs/idea010/design001/design.md
+ create mode 100644 runs/idea010/design001/iter_metrics.csv
+ create mode 100644 runs/idea010/design001/metrics.csv
+ create mode 100644 runs/idea010/design001/review.md
+ create mode 100644 runs/idea010/design001/slurm_55375313.out
+ create mode 100644 runs/idea010/design001/test_output/iter_metrics.csv
+ create mode 100644 runs/idea010/design001/test_output/metrics.csv
+ create mode 100644 runs/idea010/design001/test_output/slurm_test_55374930.out
+ create mode 100644 runs/idea010/design001/test_output/train_snapshot.py
+ create mode 100644 runs/idea010/design001/train_snapshot.py
+ create mode 100644 runs/idea010/design002/code/config.py
+ create mode 100644 runs/idea010/design002/code/model.py
+ create mode 100644 runs/idea010/design002/code/train.py
+ create mode 100644 runs/idea010/design002/code/transforms.py
+ create mode 100644 runs/idea010/design002/code_review.md
+ create mode 100644 runs/idea010/design002/design.md
+ create mode 100644 runs/idea010/design002/iter_metrics.csv
+ create mode 100644 runs/idea010/design002/metrics.csv
+ create mode 100644 runs/idea010/design002/review.md
+ create mode 100644 runs/idea010/design002/slurm_55375314.out
+ create mode 100644 runs/idea010/design002/test_output/iter_metrics.csv
+ create mode 100644 runs/idea010/design002/test_output/metrics.csv
+ create mode 100644 runs/idea010/design002/test_output/slurm_test_55375139.out
+ create mode 100644 runs/idea010/design002/test_output/train_snapshot.py
+ create mode 100644 runs/idea010/design002/train_snapshot.py
+ create mode 100644 runs/idea010/design003/code/config.py
+ create mode 100644 runs/idea010/design003/code/model.py
+ create mode 100644 runs/idea010/design003/code/train.py
+ create mode 100644 runs/idea010/design003/code/transforms.py
+ create mode 100644 runs/idea010/design003/code_review.md
+ create mode 100644 runs/idea010/design003/design.md
+ create mode 100644 runs/idea010/design003/iter_metrics.csv
+ create mode 100644 runs/idea010/design003/metrics.csv
+ create mode 100644 runs/idea010/design003/review.md
+ create mode 100644 runs/idea010/design003/slurm_55375315.out
+ create mode 100644 runs/idea010/design003/test_output/iter_metrics.csv
+ create mode 100644 runs/idea010/design003/test_output/metrics.csv
+ create mode 100644 runs/idea010/design003/test_output/slurm_test_55375141.out
+ create mode 100644 runs/idea010/design003/test_output/train_snapshot.py
+ create mode 100644 runs/idea010/design003/train_snapshot.py
+ create mode 100644 runs/idea010/design004/code/config.py
+ create mode 100644 runs/idea010/design004/code/model.py
+ create mode 100644 runs/idea010/design004/code/train.py
+ create mode 100644 runs/idea010/design004/code/transforms.py
+ create mode 100644 runs/idea010/design004/code_review.md
+ create mode 100644 runs/idea010/design004/design.md
+ create mode 100644 runs/idea010/design004/iter_metrics.csv
+ create mode 100644 runs/idea010/design004/metrics.csv
+ create mode 100644 runs/idea010/design004/review.md
+ create mode 100644 runs/idea010/design004/slurm_55375316.out
+ create mode 100644 runs/idea010/design004/test_output/iter_metrics.csv
+ create mode 100644 runs/idea010/design004/test_output/metrics.csv
+ create mode 100644 runs/idea010/design004/test_output/slurm_test_55375143.out
+ create mode 100644 runs/idea010/design004/test_output/train_snapshot.py
+ create mode 100644 runs/idea010/design004/train_snapshot.py
+ create mode 100644 runs/idea010/design005/code/config.py
+ create mode 100644 runs/idea010/design005/code/model.py
+ create mode 100644 runs/idea010/design005/code/train.py
+ create mode 100644 runs/idea010/design005/code/transforms.py
+ create mode 100644 runs/idea010/design005/code_review.md
+ create mode 100644 runs/idea010/design005/design.md
+ create mode 100644 runs/idea010/design005/iter_metrics.csv
+ create mode 100644 runs/idea010/design005/metrics.csv
+ create mode 100644 runs/idea010/design005/review.md
+ create mode 100644 runs/idea010/design005/slurm_55375317.out
+ create mode 100644 runs/idea010/design005/test_output/iter_metrics.csv
+ create mode 100644 runs/idea010/design005/test_output/metrics.csv
+ create mode 100644 runs/idea010/design005/test_output/slurm_test_55375144.out
+ create mode 100644 runs/idea010/design005/test_output/train_snapshot.py
+ create mode 100644 runs/idea010/design005/train_snapshot.py
+ create mode 100644 runs/idea010/design_overview.csv
+ create mode 100644 runs/idea010/idea.md
+ create mode 100644 runs/idea010/review_log.md
+ create mode 100644 runs/idea011/design001/code/config.py
+ create mode 100644 runs/idea011/design001/code/model.py
+ create mode 100644 runs/idea011/design001/code/train.py
+ create mode 100644 runs/idea011/design001/code/transforms.py
+ create mode 100644 runs/idea011/design001/design.md
+ create mode 100644 runs/idea011/design001/review.md
+ create mode 100644 runs/idea011/design001/test_output/iter_metrics.csv
+ create mode 100644 runs/idea011/design001/test_output/metrics.csv
+ create mode 100644 runs/idea011/design001/test_output/slurm_test_55375879.out
+ create mode 100644 runs/idea011/design001/test_output/train_snapshot.py
+ create mode 100644 runs/idea011/design002/code/config.py
+ create mode 100644 runs/idea011/design002/code/model.py
+ create mode 100644 runs/idea011/design002/code/train.py
+ create mode 100644 runs/idea011/design002/code/transforms.py
+ create mode 100644 runs/idea011/design002/design.md
+ create mode 100644 runs/idea011/design002/review.md
+ create mode 100644 runs/idea011/design002/test_output/iter_metrics.csv
+ create mode 100644 runs/idea011/design002/test_output/metrics.csv
+ create mode 100644 runs/idea011/design002/test_output/slurm_test_55375886.out
+ create mode 100644 runs/idea011/design002/test_output/train_snapshot.py
+ create mode 100644 runs/idea011/design003/code/config.py
+ create mode 100644 runs/idea011/design003/code/model.py
+ create mode 100644 runs/idea011/design003/code/train.py
+ create mode 100644 runs/idea011/design003/code/transforms.py
+ create mode 100644 runs/idea011/design003/design.md
+ create mode 100644 runs/idea011/design003/review.md
+ create mode 100644 runs/idea011/design003/test_output/iter_metrics.csv
+ create mode 100644 runs/idea011/design003/test_output/metrics.csv
+ create mode 100644 runs/idea011/design003/test_output/slurm_test_55375887.out
+ create mode 100644 runs/idea011/design003/test_output/train_snapshot.py
+ create mode 100644 runs/idea011/design004/code/config.py
+ create mode 100644 runs/idea011/design004/code/model.py
+ create mode 100644 runs/idea011/design004/code/train.py
+ create mode 100644 runs/idea011/design004/code/transforms.py
+ create mode 100644 runs/idea011/design004/design.md
+ create mode 100644 runs/idea011/design004/review.md
+ create mode 100644 runs/idea011/design004/test_output/iter_metrics.csv
+ create mode 100644 runs/idea011/design004/test_output/metrics.csv
+ create mode 100644 runs/idea011/design004/test_output/slurm_test_55375888.out
+ create mode 100644 runs/idea011/design004/test_output/train_snapshot.py
+ create mode 100644 runs/idea011/design_overview.csv
+ create mode 100644 runs/idea011/idea.md
+ create mode 100644 runs/idea011/review_log.md
+ create mode 100644 runs/idea012/design001/code/config.py
+ create mode 100644 runs/idea012/design001/code/model.py
+ create mode 100644 runs/idea012/design001/code/train.py
+ create mode 100644 runs/idea012/design001/code/transforms.py
+ create mode 100644 runs/idea012/design001/design.md
+ create mode 100644 runs/idea012/design001/review.md
+ create mode 100644 runs/idea012/design001/test_output/iter_metrics.csv
+ create mode 100644 runs/idea012/design001/test_output/metrics.csv
+ create mode 100644 runs/idea012/design001/test_output/slurm_test_55375881.out
+ create mode 100644 runs/idea012/design001/test_output/train_snapshot.py
+ create mode 100644 runs/idea012/design002/code/config.py
+ create mode 100644 runs/idea012/design002/code/model.py
+ create mode 100644 runs/idea012/design002/code/train.py
+ create mode 100644 runs/idea012/design002/code/transforms.py
+ create mode 100644 runs/idea012/design002/design.md
+ create mode 100644 runs/idea012/design002/review.md
+ create mode 100644 runs/idea012/design002/test_output/iter_metrics.csv
+ create mode 100644 runs/idea012/design002/test_output/metrics.csv
+ create mode 100644 runs/idea012/design002/test_output/slurm_test_55375882.out
+ create mode 100644 runs/idea012/design002/test_output/train_snapshot.py
+ create mode 100644 runs/idea012/design003/code/config.py
+ create mode 100644 runs/idea012/design003/code/model.py
+ create mode 100644 runs/idea012/design003/code/train.py
+ create mode 100644 runs/idea012/design003/code/transforms.py
+ create mode 100644 runs/idea012/design003/design.md
+ create mode 100644 runs/idea012/design003/review.md
+ create mode 100644 runs/idea012/design003/test_output/iter_metrics.csv
+ create mode 100644 runs/idea012/design003/test_output/metrics.csv
+ create mode 100644 runs/idea012/design003/test_output/slurm_test_55375883.out
+ create mode 100644 runs/idea012/design003/test_output/train_snapshot.py
+ create mode 100644 runs/idea012/design004/code/config.py
+ create mode 100644 runs/idea012/design004/code/model.py
+ create mode 100644 runs/idea012/design004/code/train.py
+ create mode 100644 runs/idea012/design004/code/transforms.py
+ create mode 100644 runs/idea012/design004/design.md
+ create mode 100644 runs/idea012/design004/review.md
+ create mode 100644 runs/idea012/design004/test_output/iter_metrics.csv
+ create mode 100644 runs/idea012/design004/test_output/metrics.csv
+ create mode 100644 runs/idea012/design004/test_output/slurm_test_55375884.out
+ create mode 100644 runs/idea012/design004/test_output/train_snapshot.py
+ create mode 100644 runs/idea012/design005/code/config.py
+ create mode 100644 runs/idea012/design005/code/model.py
+ create mode 100644 runs/idea012/design005/code/train.py
+ create mode 100644 runs/idea012/design005/code/transforms.py
+ create mode 100644 runs/idea012/design005/design.md
+ create mode 100644 runs/idea012/design005/review.md
+ create mode 100644 runs/idea012/design005/test_output/iter_metrics.csv
+ create mode 100644 runs/idea012/design005/test_output/metrics.csv
+ create mode 100644 runs/idea012/design005/test_output/slurm_test_55375885.out
+ create mode 100644 runs/idea012/design005/test_output/train_snapshot.py
+ create mode 100644 runs/idea012/design_overview.csv
+ create mode 100644 runs/idea012/idea.md
+ create mode 100644 runs/idea012/review_log.md
+To github.com:yanghangAI/autosapiens.git
+   710a45f..17fada6  HEAD -> gh-pages
+=== update-all 2026-04-10 00:07:53 EDT ===
+Running summarize_results...
+Successfully summarized 35 results into /work/pi_nwycoff_umass_edu/hang/auto/results.csv
+Sync complete.
+Website generated successfully in '/work/pi_nwycoff_umass_edu/hang/auto/website/index.html'!
+Dashboard deployed to gh-pages.
