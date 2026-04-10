@@ -29,3 +29,23 @@ All 16 config fields match the design spec exactly. `train.py` passes `head_hidd
 Formula and log-space numerics match the design spec exactly. `torch.no_grad()` wraps the `.copy_()` call — autograd graph clean. `trunc_normal_` preserved for regression heads. All 16 config fields match the spec. No new parameters introduced (70×256 embedding shape unchanged). 2-epoch smoke test passed; sanity check `joint_queries[0, :4] = [0.0, 1.0, 0.0, 1.0]` confirmed.
 
 **Verdict: APPROVED**
+
+---
+
+## idea009/design004 — 2026-04-09 — APPROVED
+
+**Change:** `nn.ParameterList` of 4 scalar gates added to `Pose3DHead.__init__` in `model.py`; `forward` replaced with per-layer loop applying `sigmoid(gate) * memory` before each `TransformerDecoderLayer`. No other files changed beyond `output_dir` in `config.py`.
+
+Gate initialization (`torch.tensor(4.6)`, sigmoid≈0.99) matches design spec. Per-layer loop replaces the single `self.decoder()` call correctly; 0-dim scalar broadcasts over `(B, S, hidden_dim)` correctly; `decoder.norm` guard preserved. `_init_weights` correctly does not touch gates. Gates in `nn.ParameterList` are auto-included in `lr_head` LLRD group — no optimizer changes needed. All 16 config fields match spec; gate init value (4.6) correctly kept internal to `model.py`. GPU mem 1.76/4.22GB, param count 308.8M, 2-epoch smoke test passed cleanly.
+
+**Verdict: APPROVED**
+
+---
+
+## idea009/design005 — 2026-04-09 — APPROVED
+
+**Change:** `self.output_norm = nn.LayerNorm(hidden_dim)` added to `Pose3DHead.__init__` in `model.py`; `out = self.output_norm(out)` inserted in `forward` immediately after the decoder and before `pelvis_token` extraction. No other files changed beyond `output_dir` in `config.py`.
+
+All 16 config fields match the design spec exactly. `output_norm` is an attribute of `model.head` and therefore automatically included in the `lr_head` LLRD param group — no optimizer changes required. PyTorch default initialization (weight=1, bias=0) preserved; `_init_weights` correctly unchanged. Shape `(B, num_joints, hidden_dim)` is preserved through `LayerNorm(hidden_dim)`. Total parameter count 308.8M (512 new params, negligible). GPU mem 1.76/4.22 GB. 2-epoch smoke test passed cleanly with no errors.
+
+**Verdict: APPROVED**
