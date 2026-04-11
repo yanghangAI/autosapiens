@@ -165,6 +165,48 @@
   - design003: LLRD + Depth PE + Wide Head + weight_decay=0.3 — triple with regularization
 - **Category A axes:** all 3 designs combine independently proven winners (exploit & extend)
 - **idea_overview.csv status:** Updated to 'Not Designed'.
+- **Final result:** design003 set NEW SOTA at val_mpjpe_body=106.85, val_pelvis=96.73, val_mpjpe_weighted=103.51.
+
+### idea015 — Iterative Refinement Decoder on SOTA Triple Combo
+- **Status:** Defined (2026-04-11). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea014/design003/code/` (current SOTA: 106.85 mm val_body, 103.51 weighted)
+- **Key motivation:** No prior idea varied the head's *prediction protocol*. Cascaded/iterative refinement (DETR-style) is orthogonal to LLRD, depth PE, wide head. Should reduce residual body-joint error without new widths.
+- **Designs:**
+  - design001: Two-pass shared-decoder refinement (query injection via J1->MLP->delta)
+  - design002: Two-pass shared-decoder refinement (cross-attention Gaussian bias from J1)
+  - design003: Three-pass shared-decoder refinement (deep supervision 0.25/0.5/1.0)
+  - design004: Two-pass two-decoder refinement (independent 2-layer refine decoder)
+- **Category A axes:** all 4 designs extend idea014/design003.
+- **idea_overview.csv status:** Needs 'Not Designed' row.
+
+### idea016 — 2.5D Heatmap Representation with Soft-Argmax
+- **Status:** Defined (2026-04-11). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea014/design003/code/` (SOTA 106.85)
+- **Key motivation:** Output *representation* never varied across 14 ideas. Integral Pose Regression (soft-argmax over heatmaps) is a standard 3D pose trick and naturally matches Sapiens' 40x24 feature grid.
+- **Designs:**
+  - design001: 2D heatmap + scalar depth (grid-resolution)
+  - design002: 2D heatmap + scalar depth (upsampled to 80x48)
+  - design003: Full 3D volumetric heatmap (40x24x16, sqrt bins)
+  - design004: 2D heatmap + scalar depth + auxiliary Gaussian MSE supervision
+- **Category B axes:** all 4 are novel.
+- **idea_overview.csv status:** Needs 'Not Designed' row.
+- **Key risk:** metric conversion from normalized image `(u,v)` to root-relative `(x,y)` mm requires reading the data pipeline carefully (CropPerson bbox / pelvis_uv). Designer must document the chosen path.
+
+### idea017 — Temporal Context via Adjacent-Frame Fusion
+- **Status:** Defined (2026-04-11). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea014/design003/code/` (SOTA 106.85)
+- **Key motivation:** Temporal axis entirely unexplored across 14 ideas despite sequential video data and FRAME_STRIDE=5. Pelvis depth error (~94 mm) should benefit from temporal smoothing.
+- **Designs:**
+  - design001: 8-channel input (RGB+D for frame t and t-5), single backbone pass
+  - design002: Two-frame memory concat, both trainable with gradient checkpointing
+  - design003: Two-frame memory concat, past frame `no_grad`, centre trainable
+  - design004: Three-frame symmetric `(t-5, t, t+5)`, neighbours `no_grad`, centre trainable
+- **Category B axes:** all 4 are novel.
+- **idea_overview.csv status:** Needs 'Not Designed' row.
+- **Key risk:** memory budget on 11GB. B2 is the most at-risk; B1/B3/B4 should fit. OOM designs should be marked Infeasible by Orchestrator.
 
 ## Review Principles Applied
 

@@ -13,3 +13,6 @@ idea011,LLRD with Continuous Depth PE,Done
 idea012,Regularization for Generalization,Done
 idea013,Joint Prediction Loss Reformulation,Done
 idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Done
+idea015,Iterative Refinement Decoder,Designed
+idea016,2.5D Heatmap Soft-Argmax,Designed
+idea017,Temporal Adjacent-Frame Fusion,Designed

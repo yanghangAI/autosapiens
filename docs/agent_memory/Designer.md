@@ -24,6 +24,18 @@
   - design003: Stochastic depth 0.2 (drop_path=0.2). Config-only change.
   - design004: R-Drop consistency (rdrop_alpha=1.0). New config field + train.py loop change (second no_grad forward pass, MSE on body joints).
   - design005: Combined regularization (head_dropout=0.2, weight_decay=0.2, drop_path=0.2). Config-only change.
+2026-04-11: Drafted idea017 (Temporal Adjacent-Frame Fusion). 4 designs, all from runs/idea014/design003/code/.
+  - design001: Delta-input channel stacking. 8-channel input [RGB_t, D_t, RGB_t-5, D_t-5]. Widen patch_embed Conv2d(4→8). Single backbone pass. Init 4 new channel weights = mean of original 4.
+  - design002: Cross-frame memory attention (2-frame, both trainable). Shared backbone called twice with torch.utils.checkpoint. Memory = cat([proj(feat_prev), proj(feat_t)], dim=1) → (B, 1920, 384). May need batch_size=2+accum=16 if OOM.
+  - design003: Cross-frame memory attention (2-frame, past frozen no_grad). Past-frame pass in torch.no_grad()+detach(). Only centre-frame backbone trained. Memory = (B, 1920, 384). ~7-8 GB estimate.
+  - design004: Three-frame symmetric fusion (t-5, t, t+5). Past+future in torch.no_grad()+detach(). Memory = cat([prev, t, next]) → (B, 2880, 384). ~8-9 GB estimate.
+  Key notes: All designs share the same LLRD optimizer structure. Dataloader subclasses/wraps BedlamFrameDataset to add temporal frames using the SAME CROP BBOX as the centre frame. past_frame_idx = max(0, frame_idx-1) in dataset-index space. Validation runs in single-frame fallback mode (x_prev=None, x_next=None).
+2026-04-11: Drafted idea015 (Iterative Refinement Decoder on SOTA Triple Combo). 4 designs, all from runs/idea014/design003/code/.
+  - design001: Two-pass shared-decoder refinement (query injection). refine_mlp: Linear(3→384→384), joints_out2: Linear(384→3). Loss: 0.5*L(J1) + 1.0*L(J2). ~151K new params.
+  - design002: Two-pass shared-decoder refinement (Gaussian cross-attn bias from J1). Learnable attn_bias_scale init=0. Manual norm_first=True decoder loop for pass 2 with additive Gaussian bias (sigma=2.0, expanded to (B*heads,70,960)). pelvis_uv anchor from self.uv_out(out1[:,0,:]). Loss: 0.5*L(J1) + 1.0*L(J2). ~1.2K new params.
+  - design003: Three-pass shared-decoder refinement. Shared refine_mlp across 2 transitions. joints_out2+joints_out3. Loss: 0.25*L(J1)+0.5*L(J2)+1.0*L(J3). ~152K new params.
+  - design004: Two-pass two-decoder refinement (independent 2-layer refine decoder). refine_decoder: TransformerDecoder 2-layer/384/8/1536/norm_first=True. All new params in head group (LR=1e-4, WD=0.3). ~4.87M new params. Loss: 0.5*L(J1)+1.0*L(J2).
+  Key notes: All designs modify only model.py (Pose3DHead) and train.py (loss). config.py gets informational fields only. model.head.parameters() automatically picks up new submodules.
 2026-04-10: Drafted idea014 (Best-of-Breed Combination: LLRD + Depth PE + Wide Head). 3 designs, all from runs/idea008/design003.
   - design001: Depth PE + Wide Head (no LLRD). head_hidden=384, flat optimizer (lr_backbone=1e-5). Config-only change.
   - design002: LLRD + Depth PE + Wide Head (triple combo). head_hidden=384, gamma=0.90, unfreeze_epoch=5, lr_backbone=1e-4. train.py needs LLRD logic from idea004/design002.
@@ -34,3 +46,9 @@
   - design003: Bone-length auxiliary loss (lambda_bone=0.1). 21 body-only edges from SMPLX_SKELETON. New bone_length_loss function in train.py.
   - design004: Hard-joint-weighted loss. One-shot per-joint weight computation after epoch 0, clamp [0.5, 2.0], normalize to sum=22. Weighted Smooth L1 for epochs 1-19.
   Key note: pose_loss() in infra.py uses beta=0.05. Designs 1-2 bypass it with direct F.smooth_l1_loss call. Body joints are indices 0-21 (BODY_IDX = slice(0,22)).
+2026-04-11: Drafted idea016 (2.5D Heatmap Soft-Argmax). 4 designs, all from runs/idea014/design003/code.
+  - design001: 2D heatmap (40×24) + scalar depth per joint. Linear(384,960). Soft-argmax in [0,1] UV. GT UV computed from intrinsics+pelvis depth. Loss in UV+Z space. decode_joints_heatmap helper for MPJPE.
+  - design002: Same as design001 but bilinearly upsample 40×24→80×48 logits before softmax. Tests grid resolution limit.
+  - design003: Full 3D volumetric heatmap (40×24×16=15360 bins). Linear(384,15360)=5.9M params. sqrt-spaced depth bins reused from DepthBucketPE. d_abs normalized by DEPTH_MAX_METERS in loss. decode_joints_3d helper.
+  - design004: Same as design001 + auxiliary Gaussian MSE loss (lambda_hm=0.1, sigma=2.0 grid cells). make_gaussian_targets helper in train.py. heatmap_soft returned in model output dict.
+  Key notes: pelvis auxiliary heads (depth_out, uv_out) unchanged in all 4 designs. MPJPE needs decode helper (UV+Z→metres). ViT patch grid h_tok=40, w_tok=24. IMG_H=640, IMG_W=384.

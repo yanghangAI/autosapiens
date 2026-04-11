@@ -1,0 +1,5 @@
+Design_ID,Design_Description,Status
+design001,"design001 — Delta-Input Channel Stacking (8-channel, singl",Not Implemented
+design002,"design002 — Cross-Frame Memory Attention (2-frame, both tr",Not Implemented
+design003,"design003 — Cross-Frame Memory Attention (2-frame, past fr",Not Implemented
+design004,"design004 — Three-Frame Symmetric Temporal Fusion (t-5, t,",Not Implemented
