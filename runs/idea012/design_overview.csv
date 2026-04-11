@@ -2,5 +2,5 @@ Design_ID,Design_Name,Status
 design001,Head Dropout 0.2,Done
 design002,Weight Decay 0.3,Done
 design003,Stochastic Depth 0.2,Done
-design004,R-Drop Consistency,Training
+design004,R-Drop Consistency,Done
 design005,Combined Regularization,Done
