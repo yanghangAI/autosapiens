@@ -2,4 +2,4 @@ Design_ID,Design_Name,Status
 design001,Small-beta Smooth L1 (beta=0.01),Done
 design002,Large-beta Smooth L1 (beta=0.1),Done
 design003,Bone-length Auxiliary Loss,Done
-design004,Hard-joint-weighted Loss,Training
+design004,Hard-joint-weighted Loss,Done
