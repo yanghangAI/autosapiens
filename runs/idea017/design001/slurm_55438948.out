@@ -1,0 +1,65 @@
+Loading conda version miniforge3-24.7.1
+Device: cuda
+Output: /work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001
+Temporal mode: stack  in_channels: 8
+  Saved script snapshot → /work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/train_snapshot.py
+
+Building data splits ...
+  Loaded splits from /work/pi_nwycoff_umass_edu/hang/auto/splits_rome_tracking.json
+  Sequences — train: 100, val: 50
+  Frames  — train: 6314, val: 3316
+
+Building sapiens_0.3b with in_channels=8 ...
+[weights] patch_embed: 3ch → 4ch  (depth = mean of RGB channels)
+[weights] patch_embed: 4ch → 8ch  (temporal channels = mean of 4 original channels)
+[weights] pos_embed: 64×64 → 40×24  (bicubic)
+[weights] DepthBucketPE: row_emb & col_emb init from pretrained 2D PE; depth_emb zero-initialized
+[weights] Loaded 292 / 296 backbone tensors
+[weights] Head (81 tensors) randomly initialised
+  Parameters: 314.4M
+
+Starting training for 20 epochs ...
+
+Epoch 1/20  lr_backbone=3.33e-05  lr_head=3.33e-05
+Epoch 1 [train]:   0%|          | 0/1579 [00:00<?, ?it/s]                                                         Epoch 1 [train]:   0%|          | 0/1579 [00:39<?, ?it/s]Epoch 1 [train]:   0%|          | 0/1579 [00:39<?, ?it/s, body=636.1mm, loss=0.5108, pelvis=1751.1mm, w=1004.0mm]Epoch 1 [train]:   0%|          | 1/1579 [00:39<17:22:22, 39.63s/it, body=636.1mm, loss=0.5108, pelvis=1751.1mm, w=1004.0mm]Epoch 1 [train]:   0%|          | 1/1579 [00:41<17:22:22, 39.63s/it, body=679.0mm, loss=0.5503, pelvis=1965.8mm, w=1103.6mm]Epoch 1 [train]:   0%|          | 2/1579 [00:41<7:33:52, 17.27s/it, body=679.0mm, loss=0.5503, pelvis=1965.8mm, w=1103.6mm] Epoch 1 [train]:   0%|          | 2/1579 [00:42<7:33:52, 17.27s/it, body=675.4mm, loss=0.5433, pelvis=1826.9mm, w=1055.4mm]Epoch 1 [train]:   0%|          | 3/1579 [00:42<4:25:43, 10.12s/it, body=675.4mm, loss=0.5433, pelvis=1826.9mm, w=1055.4mm]Epoch 1 [train]:   0%|          | 3/1579 [00:44<4:25:43, 10.12s/it, body=668.7mm, loss=0.5331, pelvis=1811.1mm, w=1045.7mm]Epoch 1 [train]:   0%|          | 4/1579 [00:44<2:57:29,  6.76s/it, body=668.7mm, loss=0.5331, pelvis=1811.1mm, w=1045.7mm]Epoch 1 [train]:   0%|          | 4/1579 [00:46<2:57:29,  6.76s/it, body=676.7mm, loss=0.5355, pelvis=1758.9mm, w=1033.8mm]Epoch 1 [train]:   0%|          | 5/1579 [00:46<2:08:39,  4.90s/it, body=676.7mm, loss=0.5355, pelvis=1758.9mm, w=1033.8mm]Epoch 1 [train]:   0%|          | 5/1579 [00:47<2:08:39,  4.90s/it, body=665.9mm, loss=0.5281, pelvis=1779.6mm, w=1033.4mm]Epoch 1 [train]:   0%|          | 6/1579 [00:47<1:39:19,  3.79s/it, body=665.9mm, loss=0.5281, pelvis=1779.6mm, w=1033.4mm]Epoch 1 [train]:   0%|          | 6/1579 [00:49<1:39:19,  3.79s/it, body=666.0mm, loss=0.5281, pelvis=1785.2mm, w=1035.4mm]Epoch 1 [train]:   0%|          | 7/1579 [00:49<1:20:39,  3.08s/it, body=666.0mm, loss=0.5281, pelvis=1785.2mm, w=1035.4mm]Epoch 1 [train]:   0%|          | 7/1579 [00:51<1:20:39,  3.08s/it, body=665.6mm, loss=0.5308, pelvis=1827.1mm, w=1048.9mm]Epoch 1 [train]:   1%|          | 8/1579 [00:51<1:08:56,  2.63s/it, body=665.6mm, loss=0.5308, pelvis=1827.1mm, w=1048.9mm]Epoch 1 [train]:   1%|          | 8/1579 [00:52<1:08:56,  2.63s/it, body=728.2mm, loss=0.5604, pelvis=1750.8mm, w=1065.7mm]Epoch 1 [train]:   1%|          | 9/1579 [00:52<1:00:36,  2.32s/it, body=728.2mm, loss=0.5604, pelvis=1750.8mm, w=1065.7mm]Epoch 1 [train]:   1%|          | 9/1579 [00:52<2:32:59,  5.85s/it, body=728.2mm, loss=0.5604, pelvis=1750.8mm, w=1065.7mm]
+[GPU mem after batch 1] allocated=1.82GB  reserved=6.07GB
+Traceback (most recent call last):
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/code/train.py", line 558, in <module>
+    main()
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/code/train.py", line 510, in main
+    train_m = train_one_epoch(model, train_loader, optimizer, scaler, device, epoch + 1, args,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/code/train.py", line 260, in train_one_epoch
+    for i, batch in enumerate(pbar):
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/tqdm/std.py", line 1181, in __iter__
+    for obj in iterable:
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 708, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1480, in _next_data
+    return self._process_data(data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 1505, in _process_data
+    data.reraise()
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/_utils.py", line 733, in reraise
+    raise exception
+cv2.error: Caught error in DataLoader worker process 1.
+Original Traceback (most recent call last):
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/_utils/worker.py", line 349, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/.conda/envs/hang/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 52, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/code/train.py", line 209, in __getitem__
+    rgb_crop, depth_crop = self._crop_and_resize(
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/pi_nwycoff_umass_edu/hang/auto/runs/idea017/design001/code/train.py", line 115, in _crop_and_resize
+    depth_crop = cv2.resize(
+                 ^^^^^^^^^^^
+cv2.error: OpenCV(4.13.0) /io/opencv/modules/imgproc/src/resize.cpp:4208: error: (-215:Assertion failed) !ssize.empty() in function 'resize'
+
+

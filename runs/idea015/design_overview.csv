@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
-design001,design001 — Two-Pass Shared-Decoder Refinement (Query Inje,Not Implemented
-design002,design002 — Two-Pass Shared-Decoder Refinement (Cross-Atte,Not Implemented
-design003,design003 — Three-Pass Shared-Decoder Refinement (Deep Sup,Not Implemented
-design004,design004 — Two-Pass Two-Decoder Refinement (Independent 2,Not Implemented
+design001,design001 — Two-Pass Shared-Decoder Refinement (Query Inje,Training
+design002,design002 — Two-Pass Shared-Decoder Refinement (Cross-Atte,Training
+design003,design003 — Three-Pass Shared-Decoder Refinement (Deep Sup,Training
+design004,design004 — Two-Pass Two-Decoder Refinement (Independent 2,Training

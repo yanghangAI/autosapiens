@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
-design001,design001 — 2D Heatmap + Scalar Depth (40×24 native grid),Not Implemented
-design002,design002 — 2D Heatmap + Scalar Depth (80×48 upsampled gr,Not Implemented
-design003,"design003 — Full 3D Volumetric Heatmap (40×24×16, Integr",Not Implemented
-design004,design004 — 2D Heatmap + Scalar Depth + Auxiliary Gaussian,Not Implemented
+design001,design001 — 2D Heatmap + Scalar Depth (40×24 native grid),Training
+design002,design002 — 2D Heatmap + Scalar Depth (80×48 upsampled gr,Training
+design003,"design003 — Full 3D Volumetric Heatmap (40×24×16, Integr",Training
+design004,design004 — 2D Heatmap + Scalar Depth + Auxiliary Gaussian,Training

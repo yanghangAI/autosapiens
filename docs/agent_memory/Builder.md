@@ -1,6 +1,65 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- Idea: idea017 (Temporal Adjacent-Frame Fusion): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea017 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea014/design003/code/:
+- design001 (8-channel stack, Delta-Input): PASSED job 55438467. val body MPJPE = 800.3mm. GPU mem: 7.35GB reserved.
+- design002 (2-frame cross-attention, both trainable, grad ckpt): PASSED job 55438751. val body MPJPE = 863.1mm. GPU mem: 7.95GB reserved.
+- design003 (2-frame cross-attention, past frozen no_grad): PASSED job 55438812. val body MPJPE = 975.0mm. GPU mem: 7.39GB reserved.
+- design004 (3-frame symmetric, past+future frozen no_grad): PASSED job 55438813. val body MPJPE = 1173.1mm. GPU mem: 7.55GB reserved.
+
+Key implementation notes:
+- All 4 designs share the temporal dataset pattern: BedlamFrameDataset subclassed (transform=None to super), outer transform applied after aux frame fetch, manual bbox replication using _crop_frame_with_bbox(), same normalisation constants (RGB_MEAN/STD, DEPTH_MAX)
+- design001: SapiensBackboneRGBD.__init__ takes in_channels param (default 4); load_sapiens_pretrained expands 3→4→8 (if n_ch==8, second expansion); SapiensPose3D.forward patched for validation (zero-pad 4ch→8ch) via _val_forward
+- design002: Pose3DHead.forward(feat_t, feat_prev=None) → memory=cat([mem_prev, mem_t], dim=1) for 1920 tokens; SapiensPose3D.forward uses ckpt.checkpoint on BOTH passes; validation: _val_forward passes (x4, None)
+- design003: Same head as design002; SapiensPose3D.forward: feat_t=backbone(x_t) full gradient, feat_prev=backbone(x_prev) inside no_grad+detach; validation: _val_forward passes (x4, None)
+- design004: Pose3DHead.forward(feat_t, feats_context=None) → list of context feats → memory ordering [prev, t, next] = cat([mems[1], mems[0], mems[2]]); SapiensPose3D.forward: x_prev+x_next both no_grad+detach; validation: _val_forward passes (x4, None, None)
+- All validation uses infra.validate() with model.forward monkey-patched to _val_forward (single-frame 4-channel) during val
+- Temporal dataset fetch: past_idx=max(0, frame_idx-1), future_idx=min(n_frames-1, frame_idx+1) in dataset-index space
+
+## Previous Task
+- Idea: idea016 (2.5D Heatmap Soft-Argmax): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea016 Status
+ALL 4 DESIGNS IMPLEMENTED AND TESTED. All starting from runs/idea014/design003/code/:
+- design001 (2D Heatmap + Scalar Depth, 40×24 native): PASSED job 55438470. val body MPJPE = 562.5mm.
+- design002 (2D Heatmap + Scalar Depth, 80×48 upsampled): PASSED job 55438752. val body MPJPE = 443.0mm.
+- design003 (3D Volumetric Heatmap 40×24×16, integral pose): PASSED job 55438809. val body MPJPE = 800.2mm.
+- design004 (2D Heatmap + Scalar Depth + Gaussian MSE aux): PASSED job 55438754. val body MPJPE = 437.1mm.
+
+Key implementation notes:
+- All heads output (u_norm, v_norm, ...) not (x,y,z) directly — requires custom validate function (validate_heatmap/validate_3d)
+- design001/002/004: loss in UV+Z space; MPJPE uses decode_joints_heatmap()
+- design003: loss in UVD_abs/d_scale space; MPJPE uses decode_joints_3d() (world coords minus pelvis)
+- design002: upsample heatmap 40×24 → 80×48 via F.interpolate before softmax (in logit space)
+- design003: imports DEPTH_MAX_METERS from infra; 3D head Linear(384, 40*24*16=15360); sqrt-spaced depth bins
+- design003: decode_joints_3d BUG FIX — coordinate ordering must match GT: x_rel=Y_world_j-Y_world_pel, y_rel=Z_world_j-Z_world_pel, z_rel=X_world_j-X_world_pel
+  - pelvis_abs ordering: (X_world=depth, Y_world=leftright, Z_world=updown)
+  - joints ordering: (x_rel=Y_world_rel, y_rel=Z_world_rel, z_rel=X_world_rel=depth_rel)
+- design004: returns heatmap_soft in output dict; make_gaussian_targets() helper; l_hm = F.mse_loss on body joints only
+- SapiensPose3D updated to pass heatmap_h, heatmap_w (and upsample_factor for d002) to Pose3DHead
+- design003 higher val MPJPE (~800mm vs ~500mm for 2D designs) is expected: 3D vol head outputs d_abs in [0,10m] range, untrained soft-argmax at 5m center, error ~3-4m from pelvis subtraction
+
+## Previous Task
+- Idea: idea015 (Iterative Refinement Decoder): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea015 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea014/design003/code/:
+- design001 (Two-Pass Query Injection, shared decoder): PASSED, val body MPJPE = 1499.9mm, job 55438465. model.py: added refine_mlp (Linear 3->384->GELU->Linear 384->384), joints_out2 (Linear 384->3). train.py: loss = 0.5*l_pose1 + 1.0*l_pose2
+- design002 (Two-Pass Gaussian Cross-Attn Bias, shared decoder): PASSED, val body MPJPE = 1380.4mm, job 55438473. model.py: added attn_bias_scale (scalar param, init=0), joints_out2, manual layer loop for pass2 with Gaussian bias on cross-attn logits. train.py: same loss as design001
+- design003 (Three-Pass Query Injection, progressive deep sup): PASSED, val body MPJPE = 2977.3mm, job 55438474. model.py: shared refine_mlp + joints_out2 + joints_out3. train.py: loss = 0.25*l_pose1 + 0.5*l_pose2 + 1.0*l_pose3
+- design004 (Two-Pass Independent 2-layer refine_decoder): PASSED, val body MPJPE = 790.96mm, job 55438475. model.py: added refine_mlp + refine_decoder (2-layer TransformerDecoder) + joints_out2. train.py: same loss as design001
+
+Key implementation notes:
+- design002: attn_bias_scale initialized to 0 (not sigmoid-wrapped), matching reviewer's correction note
+- design002: H_tok=40, W_tok=24 for 640x384 image. Manual layer loop for pass2 with norm_first=True order
+- design003: iter_logger still uses l_pose (combined), not per-pass losses (acceptable per design)
+- design004: refine_decoder inside Pose3DHead so auto-included in head optimizer group (no changes to LLRD builder)
+- GPU mem: design001=3.00GB, design002=3.00GB, design003~similar, design004~similar at batch=4
+
+## Previous Task
 - Idea: idea013 (Loss Function Variants): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
 
 ## idea013 Status
