@@ -1,5 +1,5 @@
 Design_ID,Design_Name,Status
-design001,LLRD gamma=0.90 + sqrt Depth PE,Training
-design002,LLRD gamma=0.85 + sqrt Depth PE,Training
-design003,LLRD gamma=0.90 unfreeze=10 + sqrt Depth PE,Training
-design004,LLRD gamma=0.90 + gated Depth PE,Training
+design001,LLRD gamma=0.90 + sqrt Depth PE,Done
+design002,LLRD gamma=0.85 + sqrt Depth PE,Done
+design003,LLRD gamma=0.90 unfreeze=10 + sqrt Depth PE,Done
+design004,LLRD gamma=0.90 + gated Depth PE,Done
