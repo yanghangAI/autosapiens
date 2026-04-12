@@ -1,6 +1,6 @@
 Design_ID,Design_Description,Status
-design001,Bone-Length Auxiliary Loss,Submitted
-design002,Kinematic-Chain Soft Attention Bias,Submitted
+design001,Bone-Length Auxiliary Loss,Training
+design002,Kinematic-Chain Soft Attention Bias,Training
 design003,Left-Right Symmetry Loss,Submitted
-design004,Joint-Group Query Initialization,Submitted
-design005,Combined Anatomical Priors,Submitted
+design004,Joint-Group Query Initialization,Training
+design005,Combined Anatomical Priors,Training
