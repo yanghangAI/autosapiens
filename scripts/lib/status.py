@@ -204,9 +204,9 @@ def derive_idea_status(idea_id: str, root: Path | None = None) -> str | None:
     statuses = [row[2] for row in rows[1:] if len(row) > 2]
     if not has_all_designs:
         return Status.NOT_DESIGNED
-    if statuses and all(status == Status.DONE for status in statuses):
+    if statuses and all(status in {Status.DONE, Status.FAILED} for status in statuses):
         return Status.DONE
-    if statuses and all(status in {Status.TRAINING, Status.DONE} for status in statuses):
+    if statuses and all(status in {Status.TRAINING, Status.DONE, Status.FAILED} for status in statuses):
         return Status.TRAINING
     if statuses and all(
         status in {Status.IMPLEMENTED, Status.SUBMITTED, Status.TRAINING, Status.DONE}
@@ -250,14 +250,14 @@ def sync_all(root: Path | None = None) -> None:
         if not idea_row:
             continue
         idea_id = idea_row[0]
-        if len(idea_row) > 2 and idea_row[2] == Status.DONE:
+        if len(idea_row) > 2 and idea_row[2] in {Status.DONE, Status.FAILED}:
             continue
         design_rows = store.read_csv_rows(layout.design_csv_path(idea_id, root))
         for design_row in design_rows[1:]:
             if not design_row:
                 continue
             design_id = design_row[0]
-            if len(design_row) > 2 and design_row[2] == Status.DONE:
+            if len(design_row) > 2 and design_row[2] in {Status.DONE, Status.FAILED}:
                 continue
             auto_update_status(
                 idea_id,

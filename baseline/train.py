@@ -132,6 +132,7 @@ def train_one_epoch(model, loader, optimizer, scaler, device, epoch, args,
 
 
 def main():
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
     args    = get_config()
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

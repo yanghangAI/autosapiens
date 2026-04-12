@@ -141,8 +141,8 @@ def main():
     random.seed(_SEED)
     np.random.seed(_SEED)
     torch.manual_seed(_SEED)
+    os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
     torch.cuda.manual_seed_all(_SEED)
-    os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
     args    = get_config()
     out_dir = Path(args.output_dir)
@@ -281,6 +281,9 @@ def main():
         # Rebuild optimizer at unfreeze epoch
         if epoch == UNFREEZE_EPOCH:
             print(f"  *** Unfreezing all backbone layers at epoch {epoch+1} ***")
+            del optimizer
+            import gc; gc.collect()
+            torch.cuda.empty_cache()
             optimizer = _build_optimizer_full()
             for g in optimizer.param_groups:
                 g["initial_lr"] = g["lr"]

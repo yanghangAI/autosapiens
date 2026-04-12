@@ -11,6 +11,7 @@ class Status:
     SUBMITTED = "Submitted"
     TRAINING = "Training"
     DONE = "Done"
+    FAILED = "Failed"
 
 
 DESIGN_STATUS_ORDER = (

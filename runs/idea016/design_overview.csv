@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
 design001,design001 — 2D Heatmap + Scalar Depth (40×24 native grid),Done
 design002,design002 — 2D Heatmap + Scalar Depth (80×48 upsampled gr,Done
-design003,"design003 — Full 3D Volumetric Heatmap (40×24×16, Integr",Training
+design003,"design003 — Full 3D Volumetric Heatmap (40×24×16, Integr",Submitted
 design004,design004 — 2D Heatmap + Scalar Depth + Auxiliary Gaussian,Done

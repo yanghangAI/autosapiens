@@ -53,3 +53,10 @@ Stop here. Do not generate the specific detailed variations yourself. You cannot
 
 1. **Memory:** You must strictly use your own separate memory file, `docs/agent_memory/Architect.md`, to write persistent notes, memory, and state across runs. Do not use, share, or overwrite other agents' memory files.
 2. **Originality:** Do not cluster ideas around the baseline defaults. Aim for diverse coverage across the space.
+3. **Memory budget:** When claiming a design "fits in 11 GB", account for all four components — not just parameter count:
+   - **Model weights**: total params × 4 bytes (fp32), or ×2 (fp16/bf16)
+   - **Optimizer state**: AdamW stores two moment tensors per trainable parameter (×2 the trainable weight size). If the training loop unfreezes backbone layers mid-run, optimizer state grows significantly at that epoch — budget for the post-unfreeze size, not the initial frozen size.
+   - **Activations**: intermediate tensors during forward+backward. Complex operations (multi-pass decoders, large attention bias tensors, etc.) can add hundreds of MB beyond what parameter counts suggest.
+   - **Extra model copies**: any shadow copy kept on GPU (EMA, SWA accumulator, teacher model) costs the full model size in memory. The ViT backbone alone is ~86M params but the full model is ~313M params (≈1.2 GB fp32) — do not undercount by citing only the backbone.
+
+   If a design is borderline, explicitly flag it in `idea.md` and instruct the Designer to add `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` at the very top of `main()` (before any CUDA initialization) and to reduce batch size as a fallback.

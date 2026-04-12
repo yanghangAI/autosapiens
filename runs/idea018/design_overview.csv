@@ -1,5 +1,5 @@
 Design_ID,Design_Description,Status
-design001,EMA of Full Model Weights (decay=0.999),Training
-design002,EMA with Warmup (decay ramps from 0 to 0.9995),Training
-design003,Stochastic Weight Averaging (SWA) over Last 5 Epochs,Training
-design004,EMA (decay=0.999) + Last-Epoch Polish Pass,Training
+design001,EMA of Full Model Weights (decay=0.999),Failed
+design002,EMA with Warmup (decay ramps from 0 to 0.9995),Failed
+design003,Stochastic Weight Averaging (SWA) over Last 5 Epochs,Failed
+design004,EMA (decay=0.999) + Last-Epoch Polish Pass,Failed
