@@ -1,6 +1,24 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- Idea: idea019 (Anatomical Structure Priors for Iterative Refinement): ALL 5 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea019 Status
+All 5 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea015/design001/code/:
+- design001 (Bone-Length Auxiliary Loss): PASSED job 55483336. val body MPJPE = 1590.7mm. GPU mem: 1.80GB alloc / 6.11GB reserved.
+- design002 (Kinematic-Chain Soft Attention Bias): PASSED job 55483415. val body MPJPE = 1499.9mm. GPU mem: similar.
+- design003 (Left-Right Symmetry Loss): PASSED job 55483444. val body MPJPE = 1671.3mm. GPU mem: similar.
+- design004 (Joint-Group Query Initialization): PASSED job 55483461. val body MPJPE = 1652.1mm. GPU mem: similar.
+- design005 (Combined Anatomical Priors): PASSED job 55483501. val body MPJPE = 1689.1mm. GPU mem: similar.
+
+Key implementation notes:
+- design001: train.py only — added bone_length_loss() using BODY_EDGES from SMPLX_SKELETON; loss = 0.5*L(J1) + 1.0*L(J2) + 0.1*bone_loss(J2). config.py: lambda_bone=0.1.
+- design002: model.py — added _build_kin_bias() BFS helper (module-level), import collections + SMPLX_SKELETON; Pose3DHead.__init__: register_buffer("kin_bias", (70,70)) + kin_bias_scale=nn.Parameter(zeros(1)); forward: manual decoder loop for pass 2 with tgt_mask=kin_bias_scale*kin_bias. config.py: kin_bias_max_hops=3, kin_bias_scale_init=0.0.
+- design003: train.py only — added symmetry_loss() with SYM_PAIRS (6 L/R limb pairs); loss = 0.5*L(J1) + 1.0*L(J2) + 0.05*sym_loss(J2). config.py: lambda_sym=0.05.
+- design004: model.py only — added joint_group_ids buffer (70,) and group_emb Embedding(4,384) zero-initialized in Pose3DHead.__init__; forward: queries2 += group_emb(joint_group_ids).unsqueeze(0) before pass 2. config.py: group_emb_init=0.0, num_joint_groups=4.
+- design005: model.py — same kin_bias changes as design002; train.py — bone_length_loss + symmetry_loss (combined); config.py: lambda_bone=0.1, lambda_sym=0.05, kin_bias_max_hops=3, kin_bias_scale_init=0.0.
+
+## Previous Task
 - Idea: idea018 (Weight Averaging: EMA and SWA on SOTA Triple-Combo): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
 
 ## idea018 Status

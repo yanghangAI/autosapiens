@@ -227,6 +227,22 @@
   - Do NOT change `model.py`, `config.py`, or `transforms.py` from idea014/design003 — training loop changes only.
 - **idea_overview.csv status:** Needs 'Not Designed' row.
 
+### idea019 — Anatomical Structure Priors for Iterative Refinement
+- **Status:** Defined (2026-04-12). Design phase NOT yet started.
+- **Designs needed:** 5 novel designs.
+- **Baseline starting point:** `runs/idea015/design001/code/` (new SOTA: 107.85 mm val_body, 89.95 pelvis, 101.94 weighted)
+- **Key motivation:** All prior ideas treat 70 joint queries as independent tokens. Anatomical structure (bone lengths, symmetry, kinematic connectivity) has never been injected into the refinement process. The remaining val error (107.85 body) is dominated by body joints, and anatomical priors could regularize predictions to be more physically plausible.
+- **Designs:**
+  - design001: Bone-length auxiliary loss on refinement output J2 (lambda_bone=0.1)
+  - design002: Kinematic-chain soft self-attention bias in refinement pass (learnable scalar, init=0)
+  - design003: Left-right symmetry loss on limb segments (lambda_sym=0.05)
+  - design004: Joint-group query initialization in refinement pass (4 groups, zero-init embeddings)
+  - design005: Combined anatomical priors (bone-length + symmetry + kinematic bias)
+- **Category A axes:** A1 derives from idea013/design003 (bone-length loss) + idea015/design001; A2 derives from idea002 (kinematic masking, now soft) + idea015/design001.
+- **Category B axes:** symmetry loss, joint-group embeddings, combined priors — all novel.
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+- **Key results context:** idea015/design001 is the new SOTA with two-pass iterative refinement. idea015/design002-004 (other refinement variants) all failed. idea016 (heatmaps), idea017 (temporal), idea018 (weight averaging) all failed or struggling. The iterative refinement architecture is confirmed as the right foundation.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).

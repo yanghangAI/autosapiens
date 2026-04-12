@@ -58,3 +58,10 @@
   - design003: Full 3D volumetric heatmap (40×24×16=15360 bins). Linear(384,15360)=5.9M params. sqrt-spaced depth bins reused from DepthBucketPE. d_abs normalized by DEPTH_MAX_METERS in loss. decode_joints_3d helper.
   - design004: Same as design001 + auxiliary Gaussian MSE loss (lambda_hm=0.1, sigma=2.0 grid cells). make_gaussian_targets helper in train.py. heatmap_soft returned in model output dict.
   Key notes: pelvis auxiliary heads (depth_out, uv_out) unchanged in all 4 designs. MPJPE needs decode helper (UV+Z→metres). ViT patch grid h_tok=40, w_tok=24. IMG_H=640, IMG_W=384.
+2026-04-12: Drafted idea019 (Anatomical Structure Priors for Iterative Refinement). 5 designs, all from runs/idea015/design001/code/.
+  - design001: Bone-length auxiliary loss on J2 (lambda_bone=0.1). BODY_EDGES from SMPLX_SKELETON filtered to a<22 and b<22. Pure train.py change, 0 new params.
+  - design002: Kinematic-chain soft self-attention bias in refinement pass 2 only. BFS hop distances (1→+1.0, 2→+0.5, 3→+0.25) in kin_bias (70,70) buffer. Learnable kin_bias_scale init=0.0. Manual layer loop for pass 2, tgt_mask=kin_bias_scale*kin_bias. 1 new param.
+  - design003: Left-right symmetry loss on J2 (lambda_sym=0.05). 6 symmetric limb segment pairs. Pure train.py change, 0 new params.
+  - design004: Joint-group query initialization in refinement pass 2. group_emb Embedding(4,384) zero-init added to queries2 before pass 2. joint_group_ids (70,) buffer: 0=torso, 1=arms, 2=legs, 3=extremities(22+). 1536 new params.
+  - design005: Combined (A1+A2+B1): bone_loss(0.1) + sym_loss(0.05) + kin_bias in pass 2. Minimal new params (1 scalar). Tests max-prior configuration.
+  Key notes: BODY_IDX = slice(0,22). SMPLX_SKELETON in infra.py remapped via _ORIG_TO_NEW. Manual decoder loop for kin_bias requires iterating self.decoder.layers with optional self.decoder.norm. Symmetric limb pair indices must be verified from _SMPLX_BONES_RAW + _ORIG_TO_NEW.
