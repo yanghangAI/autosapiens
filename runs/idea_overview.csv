@@ -16,3 +16,4 @@ idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Done
 idea015,Iterative Refinement Decoder,Training
 idea016,2.5D Heatmap Soft-Argmax,Training
 idea017,Temporal Adjacent-Frame Fusion,Implemented
+idea018,Weight Averaging: EMA and SWA on SOTA Triple-Combo,Training

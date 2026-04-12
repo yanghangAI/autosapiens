@@ -1,6 +1,23 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- Idea: idea018 (Weight Averaging: EMA and SWA on SOTA Triple-Combo): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea018 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs + polish for design004), all starting from runs/idea014/design003/code/:
+- design001 (EMA fixed decay=0.999): PASSED job 55449001. val body MPJPE = 590.6mm. GPU mem: 4.17GB alloc / 8.51GB reserved.
+- design002 (EMA warmup to decay=0.9995): PASSED job 55449002. val body MPJPE ~590mm range. GPU mem: similar to design001.
+- design003 (SWA last 5 epochs): PASSED job 55449003. val body MPJPE ~590mm range. GPU mem: 3.00GB alloc (SWA copy deferred to epoch 15).
+- design004 (EMA + polish pass): PASSED jobs 55449004/55449025/55449051. 3-stage test: EMA 2 epochs + polish epoch. Polish val body = 556.8mm. GPU mem: 2.37GB alloc during polish (EMA model freed before polish optimizer). polished.pth created. iter_metrics_polish.csv used for polish iter logging (avoids IterLogger header collision).
+
+Key implementation notes:
+- All 4 designs modify only train.py (+ minor config.py fields); model.py, transforms.py, loss function untouched
+- design001/002: EMA shadow model updated every accum_steps micro-batches; validation on EMA model only
+- design002: warmup formula min(0.9995, (1+step)/(10+step)); dict-based step counter; ema_step saved in checkpoint
+- design003: SWA copy only materialised at epoch 15; constant LR = 0.5 × cosine_LR@epoch15; running avg formula swa*n/(n+1) + live/(n+1)
+- design004: after EMA phase, del optimizer/scaler/ema_model before building flat AdamW at lr=1e-6 for polish; polish metrics appended to metrics.csv via csv.DictWriter; polish iter metrics in separate iter_metrics_polish.csv
+
+## Previous Task
 - Idea: idea017 (Temporal Adjacent-Frame Fusion): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
 
 ## idea017 Status

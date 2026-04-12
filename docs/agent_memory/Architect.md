@@ -208,6 +208,25 @@
 - **idea_overview.csv status:** Needs 'Not Designed' row.
 - **Key risk:** memory budget on 11GB. B2 is the most at-risk; B1/B3/B4 should fit. OOM designs should be marked Infeasible by Orchestrator.
 
+### idea018 — Weight Averaging (EMA / SWA) on the SOTA Triple-Combo
+- **Status:** Defined (2026-04-11). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea014/design003/code/` (SOTA 106.85 body / 103.51 weighted)
+- **Key motivation:** Weight-space averaging (EMA / SWA / Polyak) has never been tried in this project. Persistent 22–30 mm train-val gap across every idea suggests the final-epoch weights sit in a sharp minimum; weight averaging flattens it nearly for free. Pure training-loop change — no arch/data/loss changes, so gains are cleanly attributable.
+- **Designs:**
+  - design001: EMA decay=0.999, update from epoch 0, validate on EMA copy.
+  - design002: EMA with warmup schedule ramping decay from 0 → 0.9995 (slow, longer window).
+  - design003: SWA over last 5 epochs with constant LR = 0.5 × cosine LR at epoch 15.
+  - design004: EMA(0.999) throughout + 1-epoch flat-LR=1e-6 polish pass after epoch 20.
+- **Category B axes:** all 4 are novel (no prior project ever averaged weights).
+- **Key implementation notes for Designer:**
+  - Only LayerNorm used (no BatchNorm), so no BN recalibration needed after averaging.
+  - EMA copy is `copy.deepcopy(model).eval()` with `requires_grad_(False)`; update after `optimizer.step()` on accumulation boundary (NOT every micro-batch).
+  - Validation metric reported in iter_metrics.csv must be the averaged-weights metric, so it stays comparable to earlier ideas' results.csv rows.
+  - Memory: one extra full model copy (~345 MB fp32) fits in 11 GB alongside live activations.
+  - Do NOT change `model.py`, `config.py`, or `transforms.py` from idea014/design003 — training loop changes only.
+- **idea_overview.csv status:** Needs 'Not Designed' row.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).

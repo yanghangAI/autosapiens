@@ -30,6 +30,12 @@
   - design003: Cross-frame memory attention (2-frame, past frozen no_grad). Past-frame pass in torch.no_grad()+detach(). Only centre-frame backbone trained. Memory = (B, 1920, 384). ~7-8 GB estimate.
   - design004: Three-frame symmetric fusion (t-5, t, t+5). Past+future in torch.no_grad()+detach(). Memory = cat([prev, t, next]) → (B, 2880, 384). ~8-9 GB estimate.
   Key notes: All designs share the same LLRD optimizer structure. Dataloader subclasses/wraps BedlamFrameDataset to add temporal frames using the SAME CROP BBOX as the centre frame. past_frame_idx = max(0, frame_idx-1) in dataset-index space. Validation runs in single-frame fallback mode (x_prev=None, x_next=None).
+2026-04-11: Drafted idea018 (Weight Averaging: EMA and SWA on SOTA Triple-Combo). 4 designs, all from runs/idea014/design003/code/.
+  - design001: EMA fixed decay=0.999. EMA updated after each effective optimizer step. Validate on EMA model. Sanity: decay=0 → live model.
+  - design002: EMA warmup decay schedule: decay_t = min(0.9995, (1+step)/(10+step)). Ramps from ~0 to 0.9995 over ~2000 steps. Same validation protocol as design001.
+  - design003: SWA over last 5 epochs (epochs 15-19). Constant LR = 0.5×cosine_LR@epoch15. Uniform running average of epoch-end snapshots. Validate on SWA model during SWA phase.
+  - design004: EMA (decay=0.999) for 20 epochs + 1 polish epoch at flat LR=1e-6. Load EMA weights into live model, train 1 more epoch. Final metric from polished weights.
+  Key notes: All designs modify only train.py + add ema_decay/swa fields to config.py. No model.py changes. LayerNorm-only model needs no BN recalibration. Extra model copy ≈345 MB, within 11 GB budget.
 2026-04-11: Drafted idea015 (Iterative Refinement Decoder on SOTA Triple Combo). 4 designs, all from runs/idea014/design003/code/.
   - design001: Two-pass shared-decoder refinement (query injection). refine_mlp: Linear(3→384→384), joints_out2: Linear(384→3). Loss: 0.5*L(J1) + 1.0*L(J2). ~151K new params.
   - design002: Two-pass shared-decoder refinement (Gaussian cross-attn bias from J1). Learnable attn_bias_scale init=0. Manual norm_first=True decoder loop for pass 2 with additive Gaussian bias (sigma=2.0, expanded to (B*heads,70,960)). pelvis_uv anchor from self.uv_out(out1[:,0,:]). Loss: 0.5*L(J1) + 1.0*L(J2). ~1.2K new params.
