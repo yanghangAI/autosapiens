@@ -243,6 +243,36 @@
 - **idea_overview.csv status:** Updated to 'Not Designed'.
 - **Key results context:** idea015/design001 is the new SOTA with two-pass iterative refinement. idea015/design002-004 (other refinement variants) all failed. idea016 (heatmaps), idea017 (temporal), idea018 (weight averaging) all failed or struggling. The iterative refinement architecture is confirmed as the right foundation.
 
+### idea020 — Refinement-Specific Loss and Gradient Strategy
+- **Status:** Defined (2026-04-13). Design phase NOT yet started.
+- **Designs needed:** 5 novel designs.
+- **Baseline starting point:** `runs/idea015/design004/code/` (true SOTA: 102.51 mm val_body, 91.62 pelvis, 98.92 weighted)
+- **Key motivation:** The two-decoder refinement (idea015/design004) is the overall SOTA but the loss function, deep supervision weighting, and gradient flow between the two passes have never been varied. All changes are zero-parameter, targeting how the two decoders interact.
+- **Designs:**
+  - design001: Stop-gradient on J1 before refinement MLP (detach coarse→refine gradient)
+  - design002: Reduced coarse supervision weight (0.1 instead of 0.5)
+  - design003: L1 loss on refinement pass only (coarse retains Smooth L1)
+  - design004: Higher LR for refine decoder (2x head LR = 2e-4)
+  - design005: Residual refinement formulation (J2 = J1 + delta)
+- **Category A axes:** A1 (stop-gradient), A2 (supervision weight) — refine existing two-decoder setup
+- **Category B axes:** L1 refinement loss, asymmetric LR, residual formulation — all novel
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+
+### idea021 — Anatomical Priors on Two-Decoder SOTA
+- **Status:** Defined (2026-04-13). Design phase NOT yet started.
+- **Designs needed:** 4 novel designs.
+- **Baseline starting point:** `runs/idea015/design004/code/` (true SOTA: 102.51 mm val_body, 91.62 pelvis, 98.92 weighted)
+- **Key motivation:** idea019 tested anatomical priors on the weaker idea015/design001 baseline (shared decoder). This re-tests the best priors on the correct (3 mm better) two-decoder SOTA, targeting the refine decoder specifically.
+- **Designs:**
+  - design001: Kinematic soft-attention bias in refine decoder only
+  - design002: Joint-group query injection before refine decoder
+  - design003: Bone-length loss on J2 (lambda_bone=0.05, halved from idea019)
+  - design004: Kinematic bias + joint-group injection combined (best pair from idea019)
+- **Category A axes:** A1 from idea019/design002, A2 from idea019/design004 — ported to stronger baseline
+- **Category B axes:** bone-length at reduced weight, careful pair combination — novel on this baseline
+- **idea_overview.csv status:** Updated to 'Not Designed'.
+- **Key SOTA correction:** idea015/design004 (two-decoder) is the TRUE overall SOTA (98.92 weighted), not idea015/design001 (101.94). The previous summary was wrong about design004 being OOM — it completed successfully.
+
 ## Review Principles Applied
 
 - Designs must specify the exact Python API hook (argument names, tensor shapes, dtypes).

@@ -1,6 +1,39 @@
 # ProxyEnvironmentBuilder Memory
 
 ## Current Task
+- idea020 (Refinement Training Strategies): ALL 5 DESIGNS IMPLEMENTED AND TESTED.
+- idea021 (Anatomical Priors on Two-Decoder Refinement): ALL 4 DESIGNS IMPLEMENTED AND TESTED.
+
+## idea020 Status
+All 5 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea015/design004/code/ (manually copied — design004 status was "Failed" but code was APPROVED).
+- design001 (Stop-Gradient J1): PASSED jobs 55542156. val body MPJPE = 795.7mm. model.py: J1.detach() before refine_mlp.
+- design002 (Coarse Weight 0.1): PASSED job 55542157. val body MPJPE = 933.7mm. train.py: 0.1*l_pose1 + 1.0*l_pose2.
+- design003 (L1 on Refinement): PASSED job 55542158. val body MPJPE = 772.7mm. train.py: F.l1_loss for l_pose2.
+- design004 (Higher LR Refine Decoder 2x): PASSED job 55542159. val body MPJPE = 635.5mm. train.py: split head optimizer groups.
+- design005 (Residual Refinement J2=J1+delta): PASSED job 55542160. val body MPJPE = 1279.2mm. model.py: delta+J1.
+
+Key implementation notes:
+- design001: model.py — self.refine_mlp(J1.detach())
+- design002: train.py — change 0.5*l_pose1 to 0.1*l_pose1; config: refine_loss_weight=0.1
+- design003: train.py — add `import torch.nn.functional as F`; change l_pose2 to F.l1_loss
+- design004: train.py — _coarse_head_params()+_refine_head_params() helpers, two separate head groups in both optimizers; LR_REFINE=lr_head*2; frozen phase: groups 0-11=blocks12-23, 12=depth_pe, 13=coarse_head, 14=refine_head; full phase: 0=embed, 1-24=blocks0-23, 25=depth_pe, 26=coarse_head, 27=refine_head
+- design005: model.py — delta=joints_out2(out2); J2=J1+delta
+
+## idea021 Status
+All 4 designs implemented and sanity-tested (2-epoch proxy runs), all starting from runs/idea015/design004/code/ (manually copied).
+- design001 (Kinematic Bias in Refine Decoder): PASSED job 55542161. val body MPJPE = 790.9mm. model.py: _compute_kin_bias()+kin_bias buffer+kin_bias_scale param+tgt_mask in refine_decoder.
+- design002 (Joint-Group Query Injection): PASSED job 55542162. val body MPJPE = 1149.7mm. model.py: group_emb Embedding(4,384)+joint_group_ids buffer+queries2 addition.
+- design003 (Bone-Length Loss on J2, lambda=0.05): PASSED job 55542163. val body MPJPE = 789.9mm. train.py: bone_length_loss()+BODY_EDGES+SMPLX_SKELETON import+lambda_bone=0.05.
+- design004 (Kinematic Bias + Group Injection Combined): PASSED job 55542164. val body MPJPE = 1149.7mm. model.py: both A1+A2 combined.
+
+Key implementation notes:
+- NOTE: idea015/design004 status is "Failed" but code was APPROVED by Reviewer. Manually copied code instead of using setup-design (which enforces Implemented+ status).
+- All idea021 designs: model.py only (except design003 which is train.py only).
+- design001/004: _compute_kin_bias() BFS helper at module level; `import collections` at top; `from infra import ..., SMPLX_SKELETON`
+- design002/004: group_emb zero-initialized; joint_group_ids: 0-3=group0(torso), 4-9=group1(arms), 10-15=group2(legs), 16-21=group0, 22-69=group3(extremities)
+- design003: BODY_EDGES computed at module level; bone_length_loss() helper above LR SCHEDULE section; added SMPLX_SKELETON to infra imports
+
+## Previous Task
 - Idea: idea019 (Anatomical Structure Priors for Iterative Refinement): ALL 5 DESIGNS IMPLEMENTED AND TESTED.
 
 ## idea019 Status

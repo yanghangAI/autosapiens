@@ -13,8 +13,10 @@ idea011,LLRD with Continuous Depth PE,Done
 idea012,Regularization for Generalization,Done
 idea013,Joint Prediction Loss Reformulation,Done
 idea014,Best-of-Breed Combination: LLRD + Depth PE + Wide Head,Done
-idea015,Iterative Refinement Decoder,Training
-idea016,2.5D Heatmap Soft-Argmax,Training
-idea017,Temporal Adjacent-Frame Fusion,Implemented
-idea018,Weight Averaging: EMA and SWA on SOTA Triple-Combo,Failed
-idea019,Anatomical Structure Priors for Iterative Refinement,Implemented
+idea015,Iterative Refinement Decoder,Done
+idea016,2.5D Heatmap Soft-Argmax,Done
+idea017,Temporal Adjacent-Frame Fusion,Done
+idea018,Weight Averaging: EMA and SWA on SOTA Triple-Combo,Done
+idea019,Anatomical Structure Priors for Iterative Refinement,Done
+idea020,Refinement-Specific Loss and Gradient Strategy,Training
+idea021,Anatomical Priors on Two-Decoder SOTA,Training

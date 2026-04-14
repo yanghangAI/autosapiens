@@ -65,3 +65,16 @@
   - design004: Joint-group query initialization in refinement pass 2. group_emb Embedding(4,384) zero-init added to queries2 before pass 2. joint_group_ids (70,) buffer: 0=torso, 1=arms, 2=legs, 3=extremities(22+). 1536 new params.
   - design005: Combined (A1+A2+B1): bone_loss(0.1) + sym_loss(0.05) + kin_bias in pass 2. Minimal new params (1 scalar). Tests max-prior configuration.
   Key notes: BODY_IDX = slice(0,22). SMPLX_SKELETON in infra.py remapped via _ORIG_TO_NEW. Manual decoder loop for kin_bias requires iterating self.decoder.layers with optional self.decoder.norm. Symmetric limb pair indices must be verified from _SMPLX_BONES_RAW + _ORIG_TO_NEW.
+2026-04-13: Drafted idea020 (Refinement-Specific Loss and Gradient Strategy). 5 designs, all from runs/idea015/design004/code/.
+  - design001: Stop-gradient on J1 before refine_mlp. J1.detach() in model.py forward. 0 new params.
+  - design002: Reduced coarse supervision weight 0.1 (from 0.5). train.py change only: l_pose = 0.1*l_pose1 + 1.0*l_pose2. 0 new params.
+  - design003: L1 loss on refinement pass J2 (F.l1_loss), Smooth L1 kept for J1. train.py only. 0 new params.
+  - design004: Higher LR for refine decoder (2e-4 vs 1e-4). Split model.head.parameters() into coarse-head group (LR=1e-4) and refine-head group (LR=2e-4) in both _build_optimizer_frozen() and _build_optimizer_full(). 0 new params.
+  - design005: Residual refinement: J2 = J1 + joints_out2(out2) instead of J2 = joints_out2(out2). model.py 2-line change. 0 new params.
+  Key notes: All 5 designs are zero-new-param changes. Design004 splits head group in optimizer — LR group indices shift by 1 in frozen/full phase; update LR reporting block accordingly.
+2026-04-13: Drafted idea021 (Anatomical Priors on Two-Decoder SOTA). 4 designs, all from runs/idea015/design004/code/.
+  - design001: Kinematic soft-attention bias in refine_decoder only. BFS hop-distances, kin_bias (70,70) buffer + kin_bias_scale=0.0 scalar. tgt_mask=kin_bias_scale*kin_bias passed to self.refine_decoder. Coarse decoder unchanged (tgt_mask=None). 1 new param.
+  - design002: Joint-group query injection before refine_decoder. group_emb Embedding(4,384) zero-init added to queries2. joint_group_ids buffer (70,): groups 0=torso(0-3,16-21), 1=arms(4-9), 2=legs(10-15), 3=extremities(22-69). 1536 new params.
+  - design003: Bone-length loss on J2 only (lambda_bone=0.05). BODY_EDGES from SMPLX_SKELETON filtered a<22 and b<22. train.py only. 0 new params.
+  - design004: Kinematic bias + joint-group injection combined (A1+A2). Both zero-init, no symmetry/bone loss. 1537 new params total.
+  Key notes: kin_bias passed as tgt_mask to nn.TransformerDecoder uses PyTorch float-mask semantics (additive). SMPLX_SKELETON must be verified as remapped via _ORIG_TO_NEW before filtering edges. For design004, group_emb is added before bias_matrix is applied (sequential in forward: queries2 += group_bias, then refine_decoder(..., tgt_mask=bias_matrix)).

@@ -14,10 +14,14 @@ Before designing the search space, read the following files thoroughly:
 Identify what design decisions are currently hardcoded in your chosen baseline (architecture, fusion strategy, loss, input representation, etc.) and consider which of them could reasonably be varied.
 
 **Step 2 — Broader Reflection on Past Experiments.**
-Read `runs/idea_overview.csv` and `results.csv` to identify what has been tried, what performed well, and what patterns have emerged.
-Based on what you see in those two files, selectively read the `idea.md` or `design.md` of any past idea or design that seems important — for example, a top-performing idea you want to build on, or one that looks similar to a direction you're considering. Do not attempt to read all past ideas and designs; only read the ones that are genuinely relevant to your proposal.
+Start by reading `docs/agent_memory/summary.md`. This is the canonical concise record of all completed and failed experiments, including failure reasons. Use it as your primary orientation before touching any CSV.
+
+Then read `runs/idea_overview.csv` and `results.csv` to catch anything newer than what summary.md reflects.
+Based on what you see, selectively read the `idea.md` or `design.md` of any past idea or design that seems important — for example, a top-performing idea you want to build on, or one that looks similar to a direction you're considering. Do not attempt to read all past ideas and designs; only read the ones that are genuinely relevant to your proposal.
 
 Synthesize these findings: Which architectural changes improved the MPJPE? Which resulted in poor convergence or OOM errors? Use this broader reflection to explicitly identify promising directions to double-down on and dead-ends to avoid.
+
+**Before moving to Step 3, update `docs/agent_memory/summary.md`** to reflect any experiments that completed or failed since the last update (new rows in the Findings table, new failure modes if any). Also update the Current SOTA block if it has changed. Keep the file concise — one table row per idea, failure reasons in the Known Failure Modes table.
 
 **Step 3 — Propose your own design axes.**
 Based on your broader reflection of the baseline and past results, independently propose a novel set of architectural and pipeline design axes you want to explore. Each axis must fall into one of two categories:

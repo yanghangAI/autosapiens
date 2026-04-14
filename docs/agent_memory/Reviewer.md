@@ -118,3 +118,21 @@ idea019/design002 (code) reviewed on 2026-04-12. Approved: _build_kin_bias BFS c
 idea019/design003 (code) reviewed on 2026-04-12. Approved: symmetry_loss on J2; SYM_PAIRS 6 pairs all in BODY_IDX; lambda_sym=0.05 from config; loss formula correct; no model.py changes.
 idea019/design004 (code) reviewed on 2026-04-12. Approved: group_emb Embedding(4,384) zero-init; joint_group_ids buffer (70,) correct assignments; delta added to queries2 before pass 2; auto head_params; loss unchanged; minor eye-index cosmetic non-fatal.
 idea019/design005 (code) reviewed on 2026-04-12. Approved: clean union of 001+002+003; module-level collections import; kin_bias+scale in model.py; bone_length_loss+symmetry_loss in train.py; combined loss formula correct; all 4 config fields present.
+idea020/design001 reviewed on 2026-04-13. Approved: stop-gradient J1.detach() before refine_mlp; correct gradient decoupling; zero new params; all config fields specified.
+idea020/design002 reviewed on 2026-04-13. Approved: coarse weight 0.5→0.1; refine_loss_weight=0.1 in config; zero new params; all config fields specified.
+idea020/design003 reviewed on 2026-04-13. Approved: l_pose2 = F.l1_loss (pure L1) on J2 only; coarse retains Smooth L1; zero new params; all config fields specified.
+idea020/design004 reviewed on 2026-04-13. Approved: optimizer split into coarse-head (1e-4) and refine-head (2e-4); helper functions specified; group index references updated; lr_refine_head=2e-4 in config; zero new params.
+idea020/design005 reviewed on 2026-04-13. Approved: residual J2 = J1 + delta; depth_out/uv_out unaffected; zero-init warm-start correct; zero new params; all config fields specified.
+idea021/design001 reviewed on 2026-04-13. Approved: kin_bias in refine_decoder only; BFS helper correct; float additive mask; kin_bias_scale=0 init; 1 new scalar param in head group.
+idea021/design002 reviewed on 2026-04-13. Approved: group_emb Embedding(4,384) zero-init; joint_group_ids buffer 70 joints; unsqueeze(0) broadcast correct; 1536 new params in head group.
+idea021/design003 reviewed on 2026-04-13. Approved: bone_length_loss on J2 with lambda=0.05; BODY_EDGES filter correct; zero new params; applied to J2 only.
+idea021/design004 reviewed on 2026-04-13. Approved: clean union of idea021/design001+design002; both zero-init; 1537 new params; coarse decoder unchanged; no bone/sym loss.
+idea020/design001 (code) reviewed on 2026-04-13. Approved: J1.detach() confirmed in model.py line 217; train.py loss 0.5/1.0 unchanged; config correct; 2-epoch passed (w=803.6mm).
+idea020/design002 (code) reviewed on 2026-04-13. Approved: 0.1*l_pose1 + 1.0*l_pose2 in train.py; model.py unchanged; config refine_loss_weight=0.1; 2-epoch passed (w=825.9mm).
+idea020/design003 (code) reviewed on 2026-04-13. Approved: F.l1_loss for l_pose2; coarse Smooth L1 unchanged; model.py unchanged; config refine_loss_weight=0.5; 2-epoch passed (w=787.6mm).
+idea020/design004 (code) reviewed on 2026-04-13. Approved: _coarse_head_params()/_refine_head_params() split correct; group indices exact match to spec; config lr_refine_head=2e-4; 2-epoch passed (w=648.3mm).
+idea020/design005 (code) reviewed on 2026-04-13. Approved: delta=joints_out2(out2); J2=J1+delta; zero-bias init preserved; train.py/config unchanged; 2-epoch passed (w=988.5mm; warm-start expected).
+idea021/design001 (code) reviewed on 2026-04-13. Approved: _compute_kin_bias() BFS correct; kin_bias buffer + kin_bias_scale(zeros(1)); tgt_mask=bias_matrix to refine_decoder only; train.py unchanged; 2-epoch passed (w=797.9mm).
+idea021/design002 (code) reviewed on 2026-04-13. Approved: group_emb Embedding(4,384) zero-init; joint_group_ids buffer correct; queries2+group_bias.unsqueeze(0) before refine_decoder; train.py unchanged; 2-epoch passed (w=929.5mm).
+idea021/design003 (code) reviewed on 2026-04-13. Approved: bone_length_loss on J2 with BODY_EDGES; SMPLX_SKELETON import+filter correct; lambda_bone=0.05 from config; model.py unchanged; 2-epoch passed (w=795.6mm).
+idea021/design004 (code) reviewed on 2026-04-13. Approved: clean union of d001+d002; ordering correct (group_emb first, then kin_bias to tgt_mask); 1537 new params all zero-init; train.py unchanged; 2-epoch passed (w=929.5mm).

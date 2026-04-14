@@ -1,0 +1,5 @@
+Design_ID,Design_Description,Status
+design001,Kinematic Soft-Attention Bias in Refine Decoder,Training
+design002,Joint-Group Query Injection,Training
+design003,Bone-Length Aux Loss on J2,Training
+design004,Combined Kinematic Bias and Group Injection,Training
