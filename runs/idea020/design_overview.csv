@@ -1,6 +1,6 @@
 Design_ID,Design_Description,Status
-design001,Stop-gradient on Coarse Prediction,Training
-design002,Reduced Coarse Supervision Weight,Training
+design001,Stop-gradient on Coarse Prediction,Done
+design002,Reduced Coarse Supervision Weight,Done
 design003,L1 Loss on Refinement Pass,Done
 design004,Higher LR for Refine Decoder,Done
 design005,Residual Refinement Formulation,Training
