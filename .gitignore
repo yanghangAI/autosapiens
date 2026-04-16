@@ -1,6 +1,10 @@
 # Ignore Python bytecode
 *.pyc
 
+# Ignore large files (too large for GitHub)
+**/iter_metrics.csv
+**/*.pth
+
 # Ignore virtual environments
 venv/
 .env/
