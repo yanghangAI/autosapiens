@@ -432,54 +432,183 @@ class SapiensBackboneRGBD(nn.Module):
 # ── HEAD ──────────────────────────────────────────────────────────────────────
 
 class Pose3DHead(nn.Module):
-    """Transformer decoder head.
+    """
+    Transformer decoder head for 3D pose prediction.
 
-    Learnable joint queries (num_joints × hidden_dim) cross-attend to the
-    flattened backbone feature map, then a per-joint linear predicts (x,y,z).
+    Input:
+        feat: backbone feature map, usually shape (B, C, H, W)
 
-    Architecture:
-        input_proj : Linear(in_channels → hidden_dim)
-        joint_queries : Embedding(num_joints, hidden_dim)
-        decoder : TransformerDecoder (num_layers layers, num_heads heads)
-        joints_out : Linear(hidden_dim → 3)
+    Output:
+        joints:       predicted 3D joint coordinates, shape (B, num_joints, 3)
+        pelvis_depth: predicted pelvis/root depth, shape (B, 1)
+        pelvis_uv:    predicted pelvis/root 2D image coordinate, shape (B, 2)
     """
 
     def __init__(self, in_channels, num_joints=NUM_JOINTS, hidden_dim=256,
                  num_heads=8, num_layers=4, dropout=0.1):
         super().__init__()
-        self.num_joints   = num_joints
-        self.input_proj   = nn.Linear(in_channels, hidden_dim)
+
+        self.num_joints = num_joints
+
+        # Project each spatial feature vector from backbone channel dimension
+        # to Transformer hidden dimension.
+        # Example: C=1024 -> hidden_dim=256
+        self.input_proj = nn.Linear(in_channels, hidden_dim)
+
+        # Learnable joint queries.
+        # There is one query token for each joint.
+        # Shape: (num_joints, hidden_dim)
+        #
+        # Intuition:
+        #   query 0 learns to represent pelvis,
+        #   query 1 learns to represent another joint,
+        #   etc.
         self.joint_queries = nn.Embedding(num_joints, hidden_dim)
+
+        # One Transformer decoder layer.
+        # The decoder receives:
+        #   tgt    = joint queries
+        #   memory = image feature tokens
+        #
+        # Inside each decoder layer:
+        #   1. joint queries do self-attention with each other
+        #   2. joint queries cross-attend to image feature tokens
+        #   3. MLP further processes each joint token
         decoder_layer = nn.TransformerDecoderLayer(
-            d_model=hidden_dim, nhead=num_heads,
-            dim_feedforward=hidden_dim * 4, dropout=dropout,
-            batch_first=True, norm_first=True,
+            d_model=hidden_dim,
+            nhead=num_heads,
+            dim_feedforward=hidden_dim * 4,
+            dropout=dropout,
+            batch_first=True,   # use (B, N, D) instead of (N, B, D)
+            norm_first=True,    # pre-norm Transformer, usually more stable
         )
-        self.decoder    = nn.TransformerDecoder(decoder_layer, num_layers=num_layers)
+
+        # Stack multiple decoder layers.
+        self.decoder = nn.TransformerDecoder(
+            decoder_layer,
+            num_layers=num_layers
+        )
+
+        # Predict 3D coordinate for each joint token.
+        # Shape: (B, num_joints, hidden_dim) -> (B, num_joints, 3)
         self.joints_out = nn.Linear(hidden_dim, 3)
-        # Pelvis branches: query[0] (pelvis token) → depth + UV
-        self.depth_out  = nn.Linear(hidden_dim, 1)   # (B, 1) forward dist in metres
-        self.uv_out     = nn.Linear(hidden_dim, 2)   # (B, 2) normalised [-1, 1]
+
+        # Predict pelvis/root depth from the pelvis token.
+        # Shape: (B, hidden_dim) -> (B, 1)
+        self.depth_out = nn.Linear(hidden_dim, 1)
+
+        # Predict pelvis/root 2D image coordinate from the pelvis token.
+        # Shape: (B, hidden_dim) -> (B, 2)
+        self.uv_out = nn.Linear(hidden_dim, 2)
+
+        # Initialize learnable parameters.
         self._init_weights()
 
     def _init_weights(self):
+        # Initialize joint query embeddings with small random values.
+        # They will learn joint-specific meanings during training.
         nn.init.trunc_normal_(self.joint_queries.weight, std=0.02)
+
+        # Initialize output heads with small weights and zero bias.
+        # This helps keep initial predictions small and stable.
         for m in [self.joints_out, self.depth_out, self.uv_out]:
             nn.init.trunc_normal_(m.weight, std=0.02)
             nn.init.zeros_(m.bias)
 
     def forward(self, feat: torch.Tensor) -> dict[str, torch.Tensor]:
+        """
+        Args:
+            feat:
+                Backbone feature map with shape (B, C, H, W)
+
+        Returns:
+            A dictionary containing:
+                joints:       (B, num_joints, 3)
+                pelvis_depth: (B, 1)
+                pelvis_uv:    (B, 2)
+        """
+
         B = feat.size(0)
-        # (B, C, H, W) → (B, H*W, hidden_dim)
-        memory = self.input_proj(feat.flatten(2).transpose(1, 2))
-        # (B, num_joints, hidden_dim)
+
+        # ------------------------------------------------------------
+        # Convert backbone feature map into Transformer memory tokens
+        # ------------------------------------------------------------
+        #
+        # feat shape:
+        #   (B, C, H, W)
+        #
+        # feat.flatten(2):
+        #   (B, C, H*W)
+        #
+        # transpose(1, 2):
+        #   (B, H*W, C)
+        #
+        # input_proj:
+        #   (B, H*W, C) -> (B, H*W, hidden_dim)
+        #
+        # memory is the sequence of image tokens that joint queries attend to.
+        memory = self.input_proj( # image feature tokens
+            feat.flatten(2).transpose(1, 2)
+        )
+
+        # ------------------------------------------------------------
+        # Prepare learnable joint queries for this batch
+        # ------------------------------------------------------------
+        #
+        # self.joint_queries.weight:
+        #   (num_joints, hidden_dim)
+        #
+        # unsqueeze(0):
+        #   (1, num_joints, hidden_dim)
+        #
+        # expand(B, -1, -1):
+        #   (B, num_joints, hidden_dim)
+        #
+        # Each sample in the batch uses the same learned joint queries.
+        # joint tokens
         queries = self.joint_queries.weight.unsqueeze(0).expand(B, -1, -1)
-        out = self.decoder(queries, memory)               # (B, num_joints, hidden_dim)
-        pelvis_token = out[:, 0, :]                       # (B, hidden_dim) — pelvis query
+
+        # ------------------------------------------------------------
+        # Transformer decoder
+        # ------------------------------------------------------------
+        #
+        # queries:
+        #   joint tokens, shape (B, num_joints, hidden_dim)
+        #
+        # memory:
+        #   image tokens, shape (B, H*W, hidden_dim)
+        #
+        # The decoder lets each joint query:
+        #   1. communicate with other joint queries through self-attention
+        #   2. extract useful visual information through cross-attention
+        #
+        # Output:
+        #   out: joint-specific features, shape (B, num_joints, hidden_dim)
+        out = self.decoder(queries, memory)
+
+        # ------------------------------------------------------------
+        # Use the first joint token as pelvis/root token
+        # ------------------------------------------------------------
+        #
+        # This assumes joint index 0 corresponds to pelvis/root.
+        pelvis_token = out[:, 0, :]
+
+        # ------------------------------------------------------------
+        # Prediction heads
+        # ------------------------------------------------------------
+        #
+        # joints_out(out):
+        #   predict 3D coordinates for all joints
+        #
+        # depth_out(pelvis_token):
+        #   predict pelvis/root depth
+        #
+        # uv_out(pelvis_token):
+        #   predict pelvis/root 2D image coordinate
         return {
-            "joints":       self.joints_out(out),         # (B, num_joints, 3)
-            "pelvis_depth": self.depth_out(pelvis_token), # (B, 1)
-            "pelvis_uv":    self.uv_out(pelvis_token),    # (B, 2)
+            "joints":       self.joints_out(out),
+            "pelvis_depth": self.depth_out(pelvis_token),
+            "pelvis_uv":    self.uv_out(pelvis_token),
         }
 
 

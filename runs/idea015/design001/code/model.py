@@ -201,9 +201,20 @@ class Pose3DHead(nn.Module):
         memory  = self.input_proj(feat.flatten(2).transpose(1, 2))  # (B, 960, hidden_dim)
         queries = self.joint_queries.weight.unsqueeze(0).expand(B, -1, -1)  # (B, 70, hidden_dim)
 
+        # Original single-pass scheme:
+        # queries → decoder → joints
+
+        # New refinement scheme with shared decoder weights:
+        # queries → decoder → coarse joints J1
+        # J1 → refine_mlp → query injection
+        # updated queries → same decoder → refined joints J2
+
         # Pass 1: coarse prediction
         out1 = self.decoder(queries, memory)   # (B, 70, hidden_dim)
         J1   = self.joints_out(out1)           # (B, 70, 3)
+
+        # self.refine_scale = nn.Parameter(torch.tensor(0.1)) # maybe this would be helpful to stabilize training early on when the coarse predictions are very noisy, but let's start with a simple unscaled injection and see if it works
+        # queries2 = out1 + self.refine_scale * R
 
         # Refinement: inject coarse prediction into query space
         R        = self.refine_mlp(J1)        # (B, 70, hidden_dim)
